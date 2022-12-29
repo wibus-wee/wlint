@@ -1,14 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "lib": ["dom", "es2018", "esnext.array"],
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "noImplicitOverride": true,
+    "baseUrl": ".",
+    "pretty": true,
     "module": "esnext",
-    "lib": ["esnext"],
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "strictNullChecks": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true
-  }
+    "sourceMap": true,
+    "target": "ES6",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+  },
 }

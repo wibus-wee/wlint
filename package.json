@@ -16,17 +16,11 @@
       "eslint --cache --fix"
     ]
   },
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
-    }
+  "bin": {
+    "wlint": "index.js"
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
@@ -38,6 +32,16 @@
   "files": [
     "dist"
   ],
+  "bump": {
+    "leading": [
+      "git pull --rebase"
+    ],
+    "publish": true,
+    "changelog": true,
+    "allowed_branches": [
+      "main"
+    ]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -45,14 +49,12 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "build": "unbuild",
+    "build": "npm run typecheck && unbuild",
     "dev": "unbuild --stub",
     "lint": "eslint .",
     "prepublishOnly": "pnpm build",
-    "release": "bumpp && npm publish",
-    "start": "esno src/index.ts",
-    "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@innei-util/eslint-config-ts": "0.8.2",
