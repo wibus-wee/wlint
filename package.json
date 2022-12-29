@@ -1,15 +1,15 @@
 {
-  "name": "project-name",
+  "name": "wlint",
   "version": "0.0.0",
-  "description": "project-desc",
+  "description": "A Wonderful Linter Config Manager",
   "author": "wibus-wee <wibus@qq.com>",
   "license": "AGPLv3",
-  "homepage": "https://github.com/wibus-wee/project-name#readme",
+  "homepage": "https://github.com/wibus-wee/wlint#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wibus-wee/project-name.git"
+    "url": "git+https://github.com/wibus-wee/wlint.git"
   },
-  "issues": "https://github.com/wibus-wee/project-name/issues",
+  "issues": "https://github.com/wibus-wee/wlint/issues",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --ignore-path ./.prettierignore --write ",
