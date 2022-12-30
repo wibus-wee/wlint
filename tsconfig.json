@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "es2018", "esnext.array"],
     "alwaysStrict": true,
+    "strict": true,
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "declaration": true,
@@ -19,4 +20,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
   },
+  "exclude": ["dist", "node_modules"]
 }

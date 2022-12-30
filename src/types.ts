@@ -1,4 +1,6 @@
-export interface Iminimist {
+import { ParsedArgs } from "minimist";
+
+export type Iminimist = {
 	c?: string; // alias for category
 	category?: string;
 
@@ -14,6 +16,57 @@ export interface Iminimist {
 	alias?: string; // alias for wlint
 
 	original?: string; // original repository
+} & ParsedArgs;
 
-	_?: string[]; // the rest of the arguments
+export interface NPMFiles {
+	files: FilesClass;
+	totalSize: number;
+	fileCount: number;
+	shasum: string;
+	integrity: string;
+}
+
+export interface FilesClass {
+	[filename: string]: License;
+}
+
+export interface License {
+	size: number;
+	type: string;
+	path: string;
+	contentType: string;
+	hex: string;
+	isBinary: string;
+	linesCount: number;
+}
+
+// --------------------------------------------
+
+export interface GitHubFiles {
+	name: string;
+	path: string;
+	sha: string;
+	size: number;
+	url: string;
+	html_url: string;
+	git_url: string;
+	download_url: null | string;
+	type: Type;
+	_links: Links;
+}
+
+export interface Links {
+	self: string;
+	git: string;
+	html: string;
+}
+
+export enum Type {
+	Dir = "dir",
+	File = "file",
+}
+
+export interface InpmPackages {
+	linter: string;
+	packages: string[];
 }

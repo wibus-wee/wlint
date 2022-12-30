@@ -2,16 +2,14 @@ import fs from "node:fs";
 import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "./types";
-import { configFile } from "./utils";
+import { configFile, isValidateType } from "./utils";
 import { CONFIG } from "./constants";
 
-function isValidateType(_: string[]) {
-	if (!(_[1] === "add" || _[1] === "remove")) {
-		throw new Error(`${red("✖")} Invalid type`);
-	}
-}
-
-function setConfig(type, originalConfig, original) {
+function setConfig(
+	type: string,
+	originalConfig: { originals: string[] },
+	original: string
+) {
 	switch (type) {
 		case "add":
 			if (originalConfig.originals?.includes(original)) {
@@ -64,6 +62,7 @@ export const config = async (argv: Iminimist) => {
 	const res = await prompts(
 		[
 			{
+				// @ts-ignore - I have validated the type in `isValidateType` function.
 				type: !argv._[2] ? "text" : null,
 				name: "original",
 				message: "Enter the original repository",
@@ -77,8 +76,10 @@ export const config = async (argv: Iminimist) => {
 		}
 	);
 
+	// @ts-ignore - I have validated the type in `isValidateType` function.
 	const original = argv._[2] || res.original;
 	const originalConfig = configFile;
 
+	// @ts-ignore - I have validated the type in `isValidateType` function.
 	setConfig(argv._[1], originalConfig, original);
 };
