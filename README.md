@@ -9,10 +9,6 @@
 </a>
 </div>
 
-<pre align="center">
-🧪 Working in Progress
-</pre>
-
 ## Feature
 
 - Linting Config Support
