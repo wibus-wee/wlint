@@ -12,8 +12,8 @@ function consoleSource(filename: string) {
 export const alias = async (argv: Iminimist) => {
 	const shell = getShell();
 	const type = (function () {
-		if (argv._.includes("install")) return "install";
-		if (argv._.includes("uninstall")) return "uninstall";
+		if (argv._?.includes("install")) return "install";
+		if (argv._?.includes("uninstall")) return "uninstall";
 		return "install";
 	})();
 	const res = await prompts(
