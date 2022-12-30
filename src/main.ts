@@ -5,6 +5,7 @@ import { ORIGINAL, SUPPORT_LINTER } from "./constants";
 import { Iminimist, InpmPackages, NPMFiles } from "./types";
 import {
 	configFile,
+	detectPkgManage,
 	generateLinterRcFile,
 	getGitHubFile,
 	getGitHubFiles,
@@ -19,7 +20,7 @@ import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {
 	const config = configFile;
-	const packageManager = config.packageManager;
+	const packageManager = detectPkgManage();
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
 	const configOriginals = config.originals?.length
 		? config.originals

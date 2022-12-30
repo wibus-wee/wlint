@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { CONFIG } from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
+import path from "node:path";
 
 export function getShell() {
 	const { env } = process;
@@ -236,4 +237,13 @@ export function generateLinterRcFile(
 	}
 
 	fs.writeFileSync(`./.${linter.replace(".json", "")}rc`, json);
+}
+
+export function detectPkgManage() {
+	const cwd = process.cwd();
+	const resolve = (file: string) => path.resolve(cwd, file);
+	if (fs.existsSync(resolve("yarn.lock"))) return "yarn";
+	if (fs.existsSync(resolve("pnpm-lock.yaml"))) return "pnpm";
+	if (fs.existsSync(resolve("package-lock.json"))) return "npm";
+	return null;
 }
