@@ -220,17 +220,18 @@ export function generatePreittierrcFile(json: string, npmPkgs?: InpmPackages) {
 	const jsons = JSON.parse(json);
 	const prettierrc = `
 module.exports = {
+	${Object.keys(jsons).map((key) => {
+		return `${key}: ${JSON.stringify(jsons[key])},`;
+	})}
 	${
 		pkgs?.map((pkg) => {
 			return `...require("${pkg}"),`;
 		}) || ""
 	}
-	${Object.keys(jsons).map((key) => {
-		return `${key}: ${JSON.stringify(jsons[key])},`;
-	})}
 };
 `;
-	fs.writeFileSync(`./.prettierrc.js`, prettierrc.replace(/^\s+/, ""));
+	const prettierrcStr = prettierrc.replace(/(\r)?\n/g, "");
+	fs.writeFileSync("./.prettierrc.js", prettierrcStr);
 }
 
 export function generateLinterRcFile(

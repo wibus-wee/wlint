@@ -126,8 +126,8 @@ export const main = async (argv: Iminimist) => {
 		}
 	}
 
-	console.log(blue("ℹ"), "Categories:", categories.join(", "));
-	console.log(blue("ℹ"), "Files:", fileList.join(", "));
+	// console.log(blue("ℹ"), "Categories:", categories.join(", "));
+	// console.log(blue("ℹ"), "Files:", fileList.join(", "));
 
 	const selectFileList = await prompts(
 		[
@@ -150,7 +150,7 @@ export const main = async (argv: Iminimist) => {
 
 	const selectCategory = selectFileList.category || category;
 
-	console.log(blue("ℹ"), "Category:", selectCategory);
+	console.log(blue("ℹ"), "Project Category:", selectCategory);
 
 	if (isNpm) {
 		const data = cache!.files;
@@ -178,13 +178,14 @@ export const main = async (argv: Iminimist) => {
 	console.log(`${blue("ℹ")} Configuring linter...`);
 
 	let data = "";
-	SUPPORT_LINTER.forEach(async (linter) => {
+
+	for (const linter of SUPPORT_LINTER) {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
-					const fileId = cache.files[path].hex;
+					const fileId = cache!.files[path].hex;
 					data = await getNpmPackageFile(original, fileId);
 				} else {
 					data = await getGitHubFile(original, path);
@@ -197,14 +198,14 @@ export const main = async (argv: Iminimist) => {
 				);
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
-					linter, // 这个地方就只会存在 SUPPORT_LINTER 中的值
+					linter,
 					packages: parseNpmPackages(data),
 				});
 				console.log(`${green("✔")} .${linter}rc generated`);
 				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
 			}
 		}
-	});
+	}
 
 	console.log(`${blue("ℹ")} Installing linter dependencies...`);
 	try {
@@ -213,19 +214,20 @@ export const main = async (argv: Iminimist) => {
 		console.log(`${red("✖")} package.json not found`);
 		process.exit(1);
 	}
-	console.log(npmPackages);
+
 	console.log(
-		npmPackages
-			.map((item) => {
-				console.log(item.packages.join(" "));
-				return item.packages.join(" ");
-			})
-			.join(" ")
+		`${blue("ℹ")} ${packageManager} add -D ${npmPackages
+			.map((item) => item.packages.join(" "))
+			.join("")}`
 	);
 	spawn.sync(
 		packageManager,
-		["add", npmPackages.map((item) => item.packages.join(" ")).join(" ")],
-		{ stdio: "ignore" }
+		[
+			"add",
+			"-D",
+			npmPackages.map((item) => item.packages.join(" ")).join(""),
+		],
+		{ stdio: "inherit" }
 	);
 
 	console.log(`${green("✔")} Linter dependencies installed`);
