@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import { CONFIG } from "./constants";
+import { CONFIG, SUPPORT_LINTER } from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
-import { red } from "kolorist";
+import { red, yellow } from "kolorist";
 
 // only for config and alias method
 export function isValidateType(_: string[] | undefined) {
@@ -258,4 +258,21 @@ export function detectPkgManage() {
 	if (fs.existsSync(resolve("pnpm-lock.yaml"))) return "pnpm";
 	if (fs.existsSync(resolve("package-lock.json"))) return "npm";
 	return null;
+}
+
+export function checkConflict() {
+	for (const linter of SUPPORT_LINTER) {
+		const file = `.${linter.replace(".json", "")}rc`;
+		const files = fs.readdirSync("./");
+		const isConflict = files.some((f) => f.includes(file));
+		if (isConflict) {
+			console.log(
+				`${red("✖")} Please solve ${linter.replace(
+					".json",
+					""
+				)} config conflict: ${yellow(file)} is already exist`
+			);
+			process.exit(1);
+		}
+	}
 }
