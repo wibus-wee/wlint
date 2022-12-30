@@ -11,11 +11,12 @@
 
 ## Feature
 
-- ⛏️ Linting Config Support
+- ⛏️ [Linting Config Support](#linting-config-support)
 - 😄 Linting Config Auto Install
-- 🍰 Linting Config Category (You can choose which category you want to use in your project, like: `default`, `nextjs`, `react`)
-- 🎉 Custom Linting Config Support
-- 🎁 Custom Command Alias Support
+- 🍰 [Linting Config Category](#config-category)
+- 🚀 [Automatic matching category](#automatic-matching-category)
+- 🎉 [Custom Linting Config Support](#custom-linting-config-support)
+- 🎁 [Custom Command Alias Support](#custom-command-alias-support)
 
 ## Install
 
@@ -103,6 +104,28 @@ wlint -c <your category name>
 # wlint -c nextjs
 # wlint --category nextjs
 ```
+### Automatic matching category
+
+If you don't specify the category, `wlint` will automatically match the category according to the project type. `wlint` will analyze the project package.json file, and then match the category according to the `dependencies` and `devDependencies` fields.
+
+```json
+{
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "next": "^11.0.1"
+  }
+}
+```
+
+In the above example, `wlint` will automatically match the `nextjs` category. (if exists) Now `wlint` supports the following categories to be automatically matched:
+
+- [nextjs](https://nextjs.org/)
+- [react](https://reactjs.org/)
+- [vue](https://vuejs.org/)
+- [jwcjs](https://jwc.js.org/)
 
 ## Custom Command Alias Support
 
