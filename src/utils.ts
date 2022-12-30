@@ -229,9 +229,9 @@ export function generateLinterRcFile(
 	pkgs?: InpmPackages[]
 ) {
 	if (linter === "prettier.json") {
-		// @ts-ignore
 		generatePreittierrcFile(
 			json,
+			// @ts-ignore
 			pkgs.filter((pkg) => pkg.linter === "prettier.json")
 		);
 		return;
