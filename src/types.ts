@@ -13,5 +13,7 @@ export interface Iminimist {
 
 	alias?: string; // alias for wlint
 
+	original?: string; // original repository
+
 	_?: string[]; // the rest of the arguments
 }

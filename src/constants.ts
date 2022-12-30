@@ -1,1 +1,3 @@
-export const CONFIG = `${process.env.HOME}/.config/.wlintrc.json`;
+import { getUserHome } from "./utils";
+
+export const CONFIG = `${getUserHome()}/.config/.wlintrc.json`;
