@@ -171,7 +171,7 @@ export const main = async (argv: Iminimist) => {
 			}
 		});
 	}
-	fileList = fileList.filter((file) => !SUPPORT_LINTER.includes(file));
+	fileList = fileList.filter((file) => SUPPORT_LINTER.includes(file));
 
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
