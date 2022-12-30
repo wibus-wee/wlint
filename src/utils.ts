@@ -4,11 +4,14 @@ import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
 
-export function getShell() {
+export function getShell(): string {
 	const { env } = process;
-	// eslint-disable-next-line no-prototype-builtins
-	const shell = env[env.hasOwnProperty("ZSH_NAME") ? "ZSH_NAME" : "SHELL"];
-	return shell.split("/").pop();
+	const path = "ZSH_NAME" in env ? "ZSH_NAME" : "SHELL";
+	const shell = env[path];
+	if (!shell) {
+		throw new Error("Can' get shell name.");
+	}
+	return shell.split("/").pop()!;
 }
 
 export function getConfigFile() {
