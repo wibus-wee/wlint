@@ -4,6 +4,7 @@ import prompts from "prompts";
 import { ORIGINAL, SUPPORT_LINTER } from "./constants";
 import { Iminimist, InpmPackages, NPMFiles } from "./types";
 import {
+	checkConflict,
 	configFile,
 	generateLinterRcFile,
 	getGitHubFile,
@@ -18,6 +19,8 @@ import {
 import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {
+	checkConflict();
+
 	const config = configFile;
 	const packageManager = config.packageManager;
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
@@ -44,7 +47,8 @@ export const main = async (argv: Iminimist) => {
 		],
 		{
 			onCancel: () => {
-				throw new Error(`${red("✖")} Operation cancelled`);
+				console.log(`${red("✖")} Operation cancelled`);
+				process.exit(0);
 			},
 		}
 	);
@@ -67,7 +71,8 @@ export const main = async (argv: Iminimist) => {
 		],
 		{
 			onCancel: () => {
-				throw new Error(`${red("✖")} Operation cancelled`);
+				console.log(`${red("✖")} Operation cancelled`);
+				process.exit(0);
 			},
 		}
 	);
@@ -143,7 +148,8 @@ export const main = async (argv: Iminimist) => {
 		],
 		{
 			onCancel: () => {
-				throw new Error(`${red("✖")} Operation cancelled`);
+				console.log(`${red("✖")} Operation cancelled`);
+				process.exit(0);
 			},
 		}
 	);

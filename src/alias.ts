@@ -54,7 +54,8 @@ export const alias = async (argv: Iminimist) => {
 		],
 		{
 			onCancel: () => {
-				throw new Error(`${red("✖")} Operation cancelled`);
+				console.log(`${red("✖")} Operation cancelled`);
+				process.exit(0);
 			},
 		}
 	);
