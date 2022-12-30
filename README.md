@@ -1,10 +1,10 @@
 <div align="center">
-<a href="#gh-light-mode-only">
+<a href="https://github.com/wibus-wee/wlint#gh-light-mode-only">
 <img src="https://user-images.githubusercontent.com/62133302/210030839-28ec41e1-7e64-49b9-9f3f-7f09e7245b10.png" height="400" />
 
 </a>
 
-<a href="#gh-dark-mode-only">
+<a href="https://github.com/wibus-wee/wlint#gh-dark-mode-only">
 <img src="https://user-images.githubusercontent.com/62133302/210030847-a34ec7e3-5299-48e5-8146-a851adc0f4f0.png" height="400" />
 </a>
 </div>
@@ -15,6 +15,7 @@
 - 😄 Linting Config Auto Install
 - 🍰 Linting Config Category (You can choose which category you want to use in your project, like: `default`, `nextjs`, `react`)
 - 🎉 Custom Linting Config Support
+- 🎁 Custom Command Alias Support
 
 ## Install
 
@@ -89,13 +90,23 @@ wlint -c <your category name>
 # wlint --category nextjs
 ```
 
-## Something you should know
+## Custom Command Alias Support
 
-- Because I have no idea to get files in a repository or a package directly, so `wlint` will clone the repository or install the package to your local disk for caching, and then use it. Everytime you use `wlint` to install a config origin, it will check whether the config is up to date, if not, it will update it.
-- If you want to update config by yourself, you can run `wlint config update`.
-- The cache directory is `~/.wlint/cache`, you can delete it if you want to clear the cache.
+By default, `wlint` only provides the `wlint` for bin, but you can also add your own command alias. **(Only for Linux and macOS)**
 
-If you have some good ideas, please tell me to improve this project! Thank you!
+```bash
+wlint alias add <your command alias>
+# wlint alias add ww
+```
+
+Then you can use your command alias in your project! If you want to delete your command alias, you can run the following command:
+
+```bash
+wlint alias remove <your command alias>
+# wlint alias remove ww
+```
+
+**But, please don't modify the alias of the `wlint` command, or you should also delete the alias config in the `~/.config/.wlintrc.json` file.**
 
 
 ## License
