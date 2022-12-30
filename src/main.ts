@@ -155,7 +155,7 @@ export const main = async (argv: Iminimist) => {
 	if (isNpm) {
 		const data = cache.files;
 		Object.keys(data).forEach((key) => {
-			if (key.match(/\//g)?.length > 1) {
+			if (key.match(/\//g)?.length === 2) {
 				const category = key.split("/")[0];
 				if (category === selectCategory) {
 					const file = key.split("/")[1];
