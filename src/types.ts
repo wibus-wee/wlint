@@ -1,4 +1,6 @@
-export interface Iminimist {
+import { ParsedArgs } from "minimist";
+
+export type Iminimist = {
 	c?: string; // alias for category
 	category?: string;
 
@@ -14,9 +16,7 @@ export interface Iminimist {
 	alias?: string; // alias for wlint
 
 	original?: string; // original repository
-
-	_?: string[]; // the rest of the arguments
-}
+} & ParsedArgs;
 
 export interface NPMFiles {
 	files: FilesClass;
