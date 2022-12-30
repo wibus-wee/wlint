@@ -1,11 +1,25 @@
-/*
- * @FilePath: /nx-repo-template/src/index.ts
- * @author: Wibus
- * @Date: 2022-07-01 19:50:23
- * @LastEditors: Wibus
- * @LastEditTime: 2022-07-01 19:50:24
- * Coding With IU
- */
+import minimist from "minimist";
+import { alias } from "./alias";
+import { Iminimist } from "./types";
 
-export const one = a;
-export const two = 2;
+const cwd = process.cwd();
+const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
+
+async function init() {
+	try {
+		switch (argv._[0]) {
+			case "install" || "i" || "uninstall" || "un":
+				await alias(argv);
+				break;
+			default:
+				console.log("No command found");
+				break;
+		}
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+init().catch((e) => {
+	console.error(e);
+});
