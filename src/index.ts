@@ -6,5 +6,6 @@
  * @LastEditTime: 2022-07-01 19:50:24
  * Coding With IU
  */
-export const one = 1
-export const two = 2
+
+export const one = a;
+export const two = 2;

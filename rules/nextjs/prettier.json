@@ -1,0 +1,10 @@
+{
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@(.*)/(.*)$",
+    "^~/(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "extendModules": ["@innei/prettier"]
+}
