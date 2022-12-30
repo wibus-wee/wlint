@@ -70,6 +70,8 @@ You can create your own config origin, and you can also use the config origin th
 ```bash
 wlint config add <your config origin repository name>
 # wlint config add wibus-wee/wlint-config-origin
+# or you can use npm package name (if you have published your config to npm)
+# wlint config add @wibus-wee/wlint-config-origin
 ```
 3. Then you can use your config origin in your project!
 
