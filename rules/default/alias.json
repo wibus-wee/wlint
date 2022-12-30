@@ -1,6 +1,3 @@
-[
-  {
-    "alias": "prettier-config-akrc",
-    "package": "@akrc/prettier-config"
-  }
-]
+{
+  "prettier-config-akrc": "@akrc/prettier-config"
+}

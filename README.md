@@ -59,6 +59,20 @@ But in wlint, we should use `json` format, and the `require` function is not sup
 
 Then wlint will automatically install the `prettier-config-xxx` package and use it as the Prettier Config.
 
+#### Packages Alias
+
+Sometimes the package name in `require` is not the same as the package name in npm, so we need to configure the alias in `alias.json`:
+
+```json
+{
+  "eslint-config-xxx": "@xxx/eslint-config-xxx"
+}
+```
+
+It will scan the package list and install the right package according to the alias. 
+
+Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
+
 ## Custom Linting Config Support
 
 You can create your own config origin, and you can also use the config origin that others have created.
