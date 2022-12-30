@@ -5,7 +5,6 @@ import { ORIGINAL, SUPPORT_LINTER } from "./constants";
 import { Iminimist, InpmPackages, NPMFiles } from "./types";
 import {
 	configFile,
-	detectPkgManage,
 	generateLinterRcFile,
 	getGitHubFile,
 	getGitHubFiles,
@@ -20,7 +19,7 @@ import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {
 	const config = configFile;
-	const packageManager = detectPkgManage();
+	const packageManager = config.packageManager;
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
 	const configOriginals = config.originals?.length
 		? config.originals
@@ -75,13 +74,11 @@ export const main = async (argv: Iminimist) => {
 
 	const original = res.original || configOriginals[0];
 	const isNpm = isNpmPackage(original);
-	const categories = [];
-	let fileList = [];
-	let cache: NPMFiles = null;
+	const categories: Array<string> = [];
+	let fileList: Array<string> = [];
+	let cache: NPMFiles;
 	if (isNpm) {
-		const latest = await getNpmPackageInfo(original).then(
-			(res) => res?.["dist-tags"]?.latest
-		);
+		const latest = getNpmPackageInfo(original)?.["dist-tags"]?.latest;
 		if (!latest) {
 			throw new Error(`${red("✖")} Package not found`);
 		}
@@ -89,7 +86,10 @@ export const main = async (argv: Iminimist) => {
 		cache = list;
 
 		Object.keys(list.files).forEach((key) => {
-			if (key.match(/\//g)?.length > 1) {
+			if (!key?.match(/\//g)?.length) {
+				categories.push(key);
+			}
+			if (key?.match(/\//g)?.length > 1) {
 				const category = key.split("/")[0];
 				if (!categories.includes(category)) {
 					categories.push(category);
@@ -103,7 +103,7 @@ export const main = async (argv: Iminimist) => {
 				fileList.push(file);
 			});
 			fileList = fileList.filter(
-				(file) => !SUPPORT_LINTER.includes(file.value)
+				(file) => !SUPPORT_LINTER.includes(file)
 			);
 		}
 	} else {
@@ -121,7 +121,7 @@ export const main = async (argv: Iminimist) => {
 				}
 			});
 			fileList = fileList.filter(
-				(file) => !SUPPORT_LINTER.includes(file.value)
+				(file) => !SUPPORT_LINTER.includes(file)
 			);
 		}
 	}
@@ -171,15 +171,16 @@ export const main = async (argv: Iminimist) => {
 			}
 		});
 	}
-	fileList = fileList.filter((file) => !SUPPORT_LINTER.includes(file.value));
+	fileList = fileList.filter((file) => !SUPPORT_LINTER.includes(file));
 
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
 	console.log(`${blue("ℹ")} Configuring linter...`);
 
-	let data = null;
+	let data = "";
 	SUPPORT_LINTER.forEach(async (linter) => {
 		if (selectCategory) {
+			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
@@ -188,11 +189,19 @@ export const main = async (argv: Iminimist) => {
 				} else {
 					data = await getGitHubFile(original, path);
 				}
+				console.log(
+					`${blue("ℹ")} Generating .${linter.replace(
+						".json",
+						""
+					)}rc...`
+				);
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
 					linter, // 这个地方就只会存在 SUPPORT_LINTER 中的值
 					packages: parseNpmPackages(data),
 				});
+				console.log(`${green("✔")} .${linter}rc generated`);
+				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
 			}
 		}
 	});
@@ -204,10 +213,18 @@ export const main = async (argv: Iminimist) => {
 		console.log(`${red("✖")} package.json not found`);
 		process.exit(1);
 	}
-
+	console.log(npmPackages);
+	console.log(
+		npmPackages
+			.map((item) => {
+				console.log(item.packages.join(" "));
+				return item.packages.join(" ");
+			})
+			.join(" ")
+	);
 	spawn.sync(
 		packageManager,
-		["add", npmPackages.map((item) => item.packages).join(" "), "-D"],
+		["add", npmPackages.map((item) => item.packages.join(" ")).join(" ")],
 		{ stdio: "ignore" }
 	);
 
