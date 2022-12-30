@@ -3,12 +3,14 @@ import { CONFIG } from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
+import { red } from "kolorist";
 
 export function getShell() {
 	const { env } = process;
 	// eslint-disable-next-line no-prototype-builtins
 	const shell = env[env.hasOwnProperty("ZSH_NAME") ? "ZSH_NAME" : "SHELL"];
-	return shell.split("/").pop();
+	if (!shell) throw new Error(`${red("✖")} No shell found`);
+	return shell?.split("/").pop();
 }
 
 export function getConfigFile() {
