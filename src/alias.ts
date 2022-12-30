@@ -1,16 +1,14 @@
 import fs from "node:fs";
-import { spawnSync } from "child_process";
-import { cyan, green, red } from "kolorist";
+import { blue, cyan, green, red } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "./types";
-import { getShell } from "./utils";
+import { configFile, getShell, getUserHome } from "./utils";
 import { CONFIG } from "./constants";
 
 function consoleSource(filename: string) {
-	console.log(`You should restart your terminal to apply the changes`);
-	console.log(`Or run ${cyan("source")} ~/${filename}`);
+	console.log(`\nYou should restart your terminal to apply the changes`);
+	console.log(`Or run ${cyan(`source ${filename}`)}`);
 }
-
 export const alias = async (argv: Iminimist) => {
 	const shell = getShell();
 	const type =
@@ -28,7 +26,18 @@ export const alias = async (argv: Iminimist) => {
 				type: "text",
 				name: "shellrc",
 				message: `Enter the path to your ${shell}rc file`,
-				initial: `~/.${shell}rc`,
+				initial: `.${shell}rc`,
+			},
+			{
+				type: type === "uninstall" ? "multiselect" : null,
+				name: "alias",
+				message: `Select the alias you want to uninstall`,
+				choices: [
+					...configFile.alias.map((alias: string) => ({
+						title: alias,
+						value: alias,
+					})),
+				],
 			},
 			{
 				type: "confirm",
@@ -44,46 +53,66 @@ export const alias = async (argv: Iminimist) => {
 		}
 	);
 
-	const alias = argv.alias || res.alias || undefined;
-	const shellrc = res.shellrc;
+	const alias = argv.alias?.split(",") || res.alias || undefined;
+	const shellrc = `${getUserHome()}/${res.shellrc}`;
 
 	switch (type) {
 		case "install":
 			if (res.confirm) {
-				console.log(`${green("✔")} Alias ${cyan(alias)} installed`);
-				console.log(
-					`${green("✔")} ${cyan(
-						"alias"
-					)} ${alias}="wlint >> ${shellrc}"`
+				if (
+					fs
+						.readFileSync(shellrc, "utf8")
+						.toString()
+						.includes(`alias ${alias}="wlint"`)
+				) {
+					console.log(
+						`${red("✖")} Alias ${cyan(alias)} already exists`
+					);
+					consoleSource(shellrc);
+					process.exit(1);
+				}
+				fs.appendFileSync(
+					shellrc,
+					`\n\n# wlint alias: ww\nalias ${alias}="wlint"`
 				);
-				spawnSync("echo", [`alias ${alias}="wlint" >> ${shellrc}`], {
-					stdio: "inherit",
-				});
+
+				console.log(
+					`${green("✔")} ${cyan("alias")} Added to ${cyan(
+						shellrc
+					)} file. "`
+				);
 
 				console.log(`Configuring wlint config file...`);
-				const file = JSON.parse(
-					fs.readFileSync(CONFIG, "utf8").toString()
+
+				const config = {
+					...configFile,
+					alias: [...configFile.alias, alias],
+				};
+				console.log(
+					`${blue("ℹ [wlint]")} Injecting wlint config file...`
 				);
-				fs.writeFileSync(`${CONFIG}`, {
-					...file,
-					alias: [...file.alias, alias],
-				});
+				fs.writeFileSync(CONFIG, JSON.stringify(config));
+
+				console.log(`${green("✔")} Alias ${cyan(alias)} installed`);
 			}
 			break;
 		case "uninstall":
 			if (res.confirm) {
-				console.log(`${green("✔")} Alias ${cyan(alias)} uninstalled`);
-				console.log(`${green("✔")} ${cyan("unalias")} ${alias}`);
-
 				let file = fs.readFileSync(shellrc, "utf8").toString();
-				const config = JSON.parse(
-					fs.readFileSync(CONFIG, "utf8").toString()
-				);
-				const configAlias = config.alias as string[];
+				const configAlias = configFile.alias as string[];
 				configAlias.map((alias) => {
 					file = file.replace(`alias ${alias}="wlint"`, "");
 				});
 				fs.writeFileSync(shellrc, file);
+				const config = {
+					...configFile,
+					alias: configAlias.filter((a) => !res.alias.includes(a)),
+				};
+				console.log(
+					`${blue("ℹ [wlint]")} Injecting wlint config file...`
+				);
+				fs.writeFileSync(CONFIG, JSON.stringify(config));
+				console.log(`${green("✔")} Alias ${cyan(alias)} uninstalled`);
 			}
 			break;
 	}

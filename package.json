@@ -51,7 +51,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "npm run typecheck && unbuild",
-    "dev": "unbuild --stub",
+    "dev": "unbuild --stub && NODE_ENV=development node index.js",
     "lint": "eslint .",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsc --noEmit",
