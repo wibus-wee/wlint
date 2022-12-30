@@ -1,10 +1,10 @@
 <div align="center">
-<a href="#gh-mode-light-only">
+<a href="#gh-light-mode-only">
 <img src="https://user-images.githubusercontent.com/62133302/210030839-28ec41e1-7e64-49b9-9f3f-7f09e7245b10.png" height="400" />
 
 </a>
 
-<a href="#gh-mode-dark-only">
+<a href="#gh-dark-mode-only">
 <img src="https://user-images.githubusercontent.com/62133302/210030847-a34ec7e3-5299-48e5-8146-a851adc0f4f0.png" height="400" />
 </a>
 </div>
