@@ -13,6 +13,7 @@
 
 - ⛏️ [Linting Config Support](#linting-config-support)
 - 😄 Linting Config Auto Install
+- 🤖️ [Quickly linting](#quickly-linting)
 - 🍰 [Linting Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linting Config Support](#custom-linting-config-support)
@@ -73,6 +74,20 @@ Sometimes the package name in `require` is not the same as the package name in n
 It will scan the package list and install the right package according to the alias. 
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
+
+## Quickly linting
+
+You can quickly lint your project by running the following command:
+
+```bash
+wlint lint
+```
+
+`wlint` will automatically lint your project according to linter config.
+
+> But make sure you have installed the linter by `wlint`, you have better don't install the linter by yourself. It maybe cause some problems.
+
+If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
 
 ## Custom Linting Config Support
 
