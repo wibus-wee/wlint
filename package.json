@@ -79,5 +79,10 @@
     "unbuild": "1.0.2",
     "vite": "4.0.3",
     "vitest": "0.26.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "hookable@5.4.2": "patches/hookable@5.4.2.patch"
+    }
   }
 }
