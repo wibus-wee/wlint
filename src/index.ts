@@ -1,6 +1,7 @@
 import minimist from "minimist";
 import { alias } from "./alias";
 import { config } from "./config";
+import { main } from "./main";
 import { Iminimist } from "./types";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
@@ -18,7 +19,7 @@ async function init() {
 				await config(argv);
 				break;
 			default:
-				console.log("No command found");
+				main(argv);
 				break;
 		}
 	} catch (e) {

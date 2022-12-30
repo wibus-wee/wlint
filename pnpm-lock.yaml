@@ -4,6 +4,7 @@ specifiers:
   '@innei-util/eslint-config-ts': 0.8.2
   '@innei-util/prettier': 0.8.2
   '@innei/eslint-config-ts': 0.9.6
+  '@types/cross-spawn': ^6.0.2
   '@types/minimist': ^1.2.2
   '@types/node': 18.11.18
   '@types/prompts': ^2.4.2
@@ -26,6 +27,7 @@ devDependencies:
   '@innei-util/eslint-config-ts': 0.8.2_typescript@4.9.4
   '@innei-util/prettier': 0.8.2
   '@innei/eslint-config-ts': 0.9.6_typescript@4.9.4
+  '@types/cross-spawn': 6.0.2
   '@types/minimist': 1.2.2
   '@types/node': 18.11.18
   '@types/prompts': 2.4.2
@@ -726,6 +728,12 @@ packages:
 
   /@types/chai/4.3.4:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
+    dev: true
+
+  /@types/cross-spawn/6.0.2:
+    resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
+    dependencies:
+      '@types/node': 18.11.18
     dev: true
 
   /@types/estree/1.0.0:
