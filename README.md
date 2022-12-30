@@ -36,6 +36,28 @@ wlint # Quickly start linting
 - [x] Prettier (prettier.json)
 - [ ] Commitlint (commitlint.json)
 
+### Special Linting Config
+
+### Prettier
+
+Normally, if we want to use [Prettier Sharing configurations](https://prettier.io/docs/en/configuration.html#sharing-configurations), we can write like this:
+
+```js
+module.exports = {
+  ...require('prettier-config-xxx'),
+}
+```
+
+But in wlint, we should use `json` format, and the `require` function is not supported in `json` format, so we need to use the following format:
+
+```json
+{
+  "extends": ["prettier-config-xxx"]
+}
+```
+
+Then wlint will automatically install the `prettier-config-xxx` package and use it as the Prettier Config.
+
 ## Custom Linting Config Support
 
 You can create your own config origin, and you can also use the config origin that others have created.

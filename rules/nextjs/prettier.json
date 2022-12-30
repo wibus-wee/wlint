@@ -6,5 +6,5 @@
     "^@/(.*)$",
     "^[./]"
   ],
-  "extendModules": ["@innei/prettier"]
+  "extends": ["@innei/prettier"]
 }
