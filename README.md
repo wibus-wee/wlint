@@ -1,11 +1,11 @@
 <div align="center">
 <a href="https://github.com/wibus-wee/wlint#gh-light-mode-only">
-<img src="https://user-images.githubusercontent.com/62133302/210030839-28ec41e1-7e64-49b9-9f3f-7f09e7245b10.png" height="400" />
+<img src="https://user-images.githubusercontent.com/62133302/210071391-1a4d1e89-1a2e-4ef1-938c-4369397a7e89.png" />
 
 </a>
 
 <a href="https://github.com/wibus-wee/wlint#gh-dark-mode-only">
-<img src="https://user-images.githubusercontent.com/62133302/210030847-a34ec7e3-5299-48e5-8146-a851adc0f4f0.png" height="400" />
+<img src="https://user-images.githubusercontent.com/62133302/210071466-38197cce-8dbf-4a7a-b041-f5aa0e9c521d.png" />
 </a>
 </div>
 
