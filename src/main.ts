@@ -153,7 +153,7 @@ export const main = async (argv: Iminimist) => {
 	console.log(blue("ℹ"), "Category:", selectCategory);
 
 	if (isNpm) {
-		const data = cache.files;
+		const data = cache!.files;
 		Object.keys(data).forEach((key) => {
 			if (key.match(/\//g)?.length === 2) {
 				const category = key.split("/")[0];
