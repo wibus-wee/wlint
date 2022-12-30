@@ -45,7 +45,6 @@ export function isNpmPackage(name: string) {
 
 // parse npm packages from eslint and prettier config file to install
 export function parseNpmPackages(json: string) {
-	console.log(json);
 	const parsed = JSON.parse(JSON.stringify(json));
 	const npmPackages = [
 		...(parsed.extends?.filter((plugin: string) => isNpmPackage(plugin)) ||
@@ -55,9 +54,8 @@ export function parseNpmPackages(json: string) {
 		...(parsed.parser || []), // eslint(only one, @typescript-eslint/parser)
 	];
 	if (json.includes("@typescript-eslint")) {
-		npmPackages.push(["@typescript-eslint/eslint-plugin"]);
+		npmPackages.push("@typescript-eslint/eslint-plugin");
 	}
-	console.log(npmPackages);
 	return npmPackages;
 }
 
