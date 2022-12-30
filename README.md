@@ -11,11 +11,10 @@
 
 ## Feature
 
-- Linting Config Support
-- Linting Config Auto Install
-- Linting Config Category (You can choose which category you want to use in your project, like: `default`, `nextjs`, `react`)
-- Custom Shell Command Support
-- Custom Linting Config Support
+- ⛏️ Linting Config Support
+- 😄 Linting Config Auto Install
+- 🍰 Linting Config Category (You can choose which category you want to use in your project, like: `default`, `nextjs`, `react`)
+- 🎉 Custom Linting Config Support
 
 ## Install
 
@@ -25,8 +24,9 @@ npm i -g wlint
 
 ## Usage
 
-```
+```bash
 wlint # Quickly start linting
+wlint -c <category> # Use the config in the category
 ```
 
 ## Linting Config Support
@@ -38,13 +38,13 @@ wlint # Quickly start linting
 
 ### Special Linting Config
 
-### Prettier
+#### Prettier
 
 Normally, if we want to use [Prettier Sharing configurations](https://prettier.io/docs/en/configuration.html#sharing-configurations), we can write like this:
 
 ```js
 module.exports = {
-  ...require('prettier-config-xxx'),
+  ...require('@xxx/prettier-config-xxx'),
 }
 ```
 
@@ -52,7 +52,7 @@ But in wlint, we should use `json` format, and the `require` function is not sup
 
 ```json
 {
-  "extends": ["prettier-config-xxx"]
+  "extends": ["@xxx/prettier-config-xxx"]
 }
 ```
 
@@ -88,6 +88,15 @@ wlint -c <your category name>
 # wlint -c nextjs
 # wlint --category nextjs
 ```
+
+## Something you should know
+
+- Because I have no idea to get files in a repository or a package directly, so `wlint` will clone the repository or install the package to your local disk for caching, and then use it. Everytime you use `wlint` to install a config origin, it will check whether the config is up to date, if not, it will update it.
+- If you want to update config by yourself, you can run `wlint config update`.
+- The cache directory is `~/.wlint/cache`, you can delete it if you want to clear the cache.
+
+If you have some good ideas, please tell me to improve this project! Thank you!
+
 
 ## License
 
