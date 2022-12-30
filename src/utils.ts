@@ -27,3 +27,10 @@ export const configFile = JSON.parse(getConfigFile());
 export function getUserHome() {
 	return process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
 }
+
+export function isNpmPackage(name: string) {
+	return (
+		(name.startsWith("@") && name.includes("/")) ||
+		(!name.startsWith("@") && !name.includes("/"))
+	);
+}
