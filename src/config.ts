@@ -2,16 +2,14 @@ import fs from "node:fs";
 import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "./types";
-import { configFile } from "./utils";
+import { configFile, isValidateType } from "./utils";
 import { CONFIG } from "./constants";
 
-function isValidateType(_: string[] | undefined) {
-	if (!_ || !(_[1] === "add" || _[1] === "remove")) {
-		throw new Error(`${red("✖")} Invalid type`);
-	}
-}
-
-function setConfig(type, originalConfig, original) {
+function setConfig(
+	type: string,
+	originalConfig: { originals: string[] },
+	original: string
+) {
 	switch (type) {
 		case "add":
 			if (originalConfig.originals?.includes(original)) {
