@@ -5,6 +5,13 @@ import https from "node:https";
 import path from "node:path";
 import { red } from "kolorist";
 
+// only for config and alias method
+export function isValidateType(_: string[] | undefined) {
+	if (!_ || !(_[1] === "add" || _[1] === "remove")) {
+		throw new Error(`${red("✖")} Invalid type`);
+	}
+}
+
 export function getShell() {
 	const { env } = process;
 	// eslint-disable-next-line no-prototype-builtins

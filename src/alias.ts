@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, cyan, green, red } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "./types";
-import { configFile, getShell, getUserHome } from "./utils";
+import { configFile, getShell, getUserHome, isValidateType } from "./utils";
 import { CONFIG } from "./constants";
 
 function consoleSource(filename: string) {
@@ -10,12 +10,16 @@ function consoleSource(filename: string) {
 	console.log(`Or run ${cyan(`source ${filename}`)}`);
 }
 export const alias = async (argv: Iminimist) => {
+	isValidateType(argv._);
 	const shell = getShell();
 	const type = (function () {
-		if (argv._?.includes("install")) return "install";
-		if (argv._?.includes("uninstall")) return "uninstall";
+		if (argv._[1] === "add") return "install";
+		if (argv._[1] === "remove") return "uninstall";
 		return "install";
 	})();
+	if (configFile.alias.length === 0 && type === "uninstall") {
+		throw new Error(`${red("✖")} No alias found`);
+	}
 	const res = await prompts(
 		[
 			{
@@ -73,10 +77,7 @@ export const alias = async (argv: Iminimist) => {
 					consoleSource(shellrc);
 					process.exit(1);
 				}
-				fs.appendFileSync(
-					shellrc,
-					`\n\n# wlint alias: ww\nalias ${alias}="wlint"`
-				);
+				fs.appendFileSync(shellrc, `\nalias ${alias}="wlint"`);
 
 				console.log(
 					`${green("✔")} ${cyan("alias")} Added to ${cyan(
