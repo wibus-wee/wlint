@@ -89,7 +89,7 @@ export const main = async (argv: Iminimist) => {
 			if (!key?.match(/\//g)?.length) {
 				categories.push(key);
 			}
-			if (key?.match(/\//g)?.length > 1) {
+			if (key?.match(/\//g)?.length === 2) {
 				const category = key.split("/")[0];
 				if (!categories.includes(category)) {
 					categories.push(category);
