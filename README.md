@@ -37,7 +37,7 @@ wlint -c <category> # Use the config in the category
 ## Linting Config Support
 
 - [x] ESLint (eslint.json)
-- [ ] Stylelint (stylelint.json)
+- [x] Stylelint (stylelint.json)
 - [x] Prettier (prettier.json)
 - [ ] Commitlint (commitlint.json)
 

@@ -296,7 +296,7 @@ export function generateLinterRcFile(
 		return;
 	}
 
-	fs.writeFileSync(`./.${linter.replace(".json", "")}rc`, json);
+	fs.writeFileSync(`./.${linter.replace(".json", "")}rc.json`, json);
 }
 
 export function detectPkgManage() {
