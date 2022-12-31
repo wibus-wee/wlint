@@ -18,6 +18,7 @@
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linting Config Support](#custom-linting-config-support)
 - 🎁 [Custom Command Alias Support](#custom-command-alias-support)
+- 🎨 [User Config Support](#user-config-support)
 
 ## Install
 
@@ -99,10 +100,15 @@ You can create your own config origin, and you can also use the config origin th
 2. Go to your shell and run the following command:
 
 ```bash
-wlint config add <your config origin repository name>
-# wlint config add wibus-wee/wlint-config-origin
+wlint origin add <your config origin repository name>
+# wlint origin add wibus-wee/wlint-config-origin
 # or you can use npm package name (if you have published your config to npm)
-# wlint config add @wibus-wee/wlint-config-origin
+# wlint origin add @wibus-wee/wlint-config-origin
+
+# If you want to remove the config origin, you can run the following command:
+wlint origin remove <your config origin repository name>
+# wlint origin remove wibus-wee/wlint-config-origin
+# wlint origin remove @wibus-wee/wlint-config-origin
 ```
 3. Then you can use your config origin in your project!
 
@@ -119,6 +125,7 @@ wlint -c <your category name>
 # wlint -c nextjs
 # wlint --category nextjs
 ```
+
 ### Automatic matching category
 
 If you don't specify the category, `wlint` will automatically match the category according to the project type. `wlint` will analyze the project package.json file, and then match the category according to the `dependencies` and `devDependencies` fields.
@@ -135,7 +142,15 @@ If you don't specify the category, `wlint` will automatically match the category
 }
 ```
 
-In the above example, `wlint` will automatically match the `nextjs` category. (if exists) Now `wlint` supports the following categories to be automatically matched:
+In the above example, `wlint` will automatically match the `nextjs` category. If `nextjs` category does not exist, `wlint` will try to match the `react` category, and so on.
+
+You should open the `autoMatch` option in wlint config to enable the automatic matching category. If you want to learn more about wlint config, you can see the [User Config Support](#user-config-support) section.
+
+```bash
+wlint config set autoMatch true
+```
+
+Now `wlint` supports the following categories to be automatically matched:
 
 - [nextjs](https://nextjs.org/)
 - [react](https://reactjs.org/)
@@ -160,6 +175,27 @@ wlint alias remove <your command alias>
 
 **But, please don't modify the alias of the `wlint` command, or you should also delete the alias config in the `~/.config/.wlintrc.json` file.**
 
+## User Config Support
+
+`wlint` have a user config file, you can use the following command to edit the user config file:
+
+```bash
+wlint config [set|get|remove] <key> [value]
+```
+
+Command alias, automatic matching category and some features are all configured in the user config file.
+
+```bash
+# if you want to use `config set` to setup alias
+wlint config set alias ww
+# same as `wlint alias add ww`
+wlint config remove alias ww
+# same as `wlint alias remove ww`
+
+# if you want to use `config set` to setup automatic matching category
+wlint config set autoMatch true
+wlint config remove autoMatch
+```
 
 ## License
 
