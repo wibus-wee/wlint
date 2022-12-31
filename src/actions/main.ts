@@ -6,6 +6,7 @@ import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
 	checkConflict,
 	configFile,
+	detectPkgManage,
 	generateLinterRcFile,
 	getGitHubFile,
 	getGitHubFiles,
@@ -14,7 +15,6 @@ import {
 	getNpmPackageInfo,
 	isNpmPackage,
 	parseNpmPackages,
-	setConfig,
 } from "../utils";
 import spawn from "cross-spawn";
 
@@ -22,7 +22,7 @@ export const main = async (argv: Iminimist) => {
 	checkConflict();
 
 	const config = configFile;
-	const packageManager = config.packageManager;
+	let packageManager = detectPkgManage();
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
 	const configOriginals = config.originals?.length
 		? config.originals
@@ -31,30 +31,36 @@ export const main = async (argv: Iminimist) => {
 		: [ORIGINAL];
 	const category = argv.category || argv.c || undefined; // 使用的是哪个分类下的配置，如果没有指定的话有两个情况，一个是直接写根目录了全都的配置，这个时候就不需要继续进入文件夹了，一个是只有default分类，那这个情况就用default分类
 
-	const packageManagerSetting = await prompts(
-		[
+	try {
+		fs.readFileSync("package.json");
+	} catch (e) {
+		console.log(`${red("✖")} package.json not found`);
+		process.exit(1);
+	}
+
+	if (!packageManager) {
+		console.log(`${blue("✖")} Can't detect package manager.`);
+		const res = await prompts(
 			{
-				type: packageManager ? null : "select",
+				type: "select",
 				name: "packageManager",
-				message: "Which package manager do you want to use?",
+				message: `${blue(
+					"✖"
+				)} Can't detect package manager. Please select one:`,
 				choices: [
 					{ title: "npm", value: "npm" },
 					{ title: "yarn", value: "yarn" },
 					{ title: "pnpm", value: "pnpm" },
 				],
-				initial: 0,
 			},
-		],
-		{
-			onCancel: () => {
-				console.log(`${red("✖")} Operation cancelled`);
-				process.exit(0);
-			},
-		}
-	);
-
-	if (!packageManager) {
-		setConfig("packageManager", packageManagerSetting.packageManager);
+			{
+				onCancel: () => {
+					console.log(`${red("✖")} Operation cancelled`);
+					process.exit(0);
+				},
+			}
+		);
+		packageManager = res.packageManager;
 	}
 
 	const res = await prompts(
@@ -227,13 +233,11 @@ export const main = async (argv: Iminimist) => {
 	}
 
 	console.log(`${blue("ℹ")} Installing linter dependencies...`);
-	try {
-		fs.readFileSync("package.json");
-	} catch (e) {
-		console.log(`${red("✖")} package.json not found`);
-		process.exit(1);
-	}
 
+	if (!packageManager)
+		throw new Error(
+			"packageManager is undefined, please create an issue in https://github.com/wibus-wee/wlint/issues"
+		);
 	console.log(
 		`${blue("ℹ")} ${packageManager} add -D ${npmPackages
 			.map((item) => item.packages.join(" "))
