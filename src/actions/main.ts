@@ -212,7 +212,7 @@ export const main = async (argv: Iminimist) => {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
-				const alias = wlintConfig?.alias || {};
+				const aliases = wlintConfig?.aliases || {};
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
@@ -229,7 +229,7 @@ export const main = async (argv: Iminimist) => {
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(data, alias),
+					packages: parseNpmPackages(data, aliases),
 				});
 				console.log(`${green("✔")} .${linter}rc generated`);
 				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
