@@ -11,12 +11,12 @@
 
 ## Features
 
-- ⛏️ [Linting Config Support](#linting-config-support)
-- 😄 [Linting Config Auto Install](#linting-config-auto-install)
+- ⛏️ [Linter Configs Support](#linter-configs-support)
+- 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
 - 🤖️ [Quickly linting](#quickly-linting)
-- 🍰 [Linting Config Category](#config-category)
+- 🍰 [Linter Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
-- 🎉 [Custom Linting Config Support](#custom-linting-config-support)
+- 🎉 [Custom Linter Configs Origin](#custom-linter-configs-origin)
 - 🎁 [Custom Command Alias Support](#custom-command-alias-support)
 - 🎨 [User Config Support](#user-config-support)
 - 📦 [Repository Config Support](#repository-config-support)
@@ -34,7 +34,7 @@ wlint # Quickly start linting
 wlint -c <category> # Use the config in the category
 ```
 
-## Linting Config Support
+## Linters Config Support
 
 - [x] ESLint (eslint.json)
 - [x] Stylelint (stylelint.json)
@@ -81,7 +81,7 @@ Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package
 
 If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
 
-## Linting Config Auto Install
+## Linter Packages Auto Install
 
 wlint will automatically install the linter config package according to the linter config file. And you don't need to install the linter config package by yourself, wlint will analyze which package you need to install, and then install it automatically.
 
@@ -102,7 +102,7 @@ wlint lint
 
 If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
 
-## Custom Linting Config Support
+## Custom Linter Configs Origin
 
 You can create your own config origin, and you can also use the config origin that others have created.
 
