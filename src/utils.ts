@@ -1,5 +1,10 @@
 import fs from "node:fs";
-import { CONFIG, SUPPORT_CONFIG_KEYS, SUPPORT_LINTER } from "./constants";
+import {
+	AUTO_MATCH,
+	CONFIG,
+	SUPPORT_CONFIG_KEYS,
+	SUPPORT_LINTER,
+} from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
@@ -362,4 +367,69 @@ export function isKeyValid(key: string, value: any) {
 	if (k.optional && !value) return true;
 	if (typeof transformValue(value) !== type) return false;
 	return true;
+}
+
+export function autoMatcher(autoMatchConfig?: {
+	[key: string]: string[] | string;
+}) {
+	if (!fs.existsSync(path.resolve(process.cwd(), "package.json"))) {
+		console.log(`${red("✖")} Please run this command in a project folder`);
+		process.exit(1);
+	}
+	const packages = require(path.resolve(process.cwd(), "package.json"));
+	let dependencies: string[] = [];
+	if (packages.dependencies) {
+		// 只需要名字
+		dependencies = Object.keys(packages.dependencies);
+	}
+	if (packages.devDependencies) {
+		dependencies = dependencies.concat(
+			Object.keys(packages.devDependencies)
+		);
+	}
+
+	const auto_match = AUTO_MATCH;
+
+	function removeValueFromAutoMatch(value: string) {
+		for (const k in auto_match) {
+			if (Object.prototype.hasOwnProperty.call(auto_match, k)) {
+				const val = auto_match[k];
+				if (Array.isArray(val)) {
+					if (val.includes(value)) {
+						auto_match[k] = val.filter((i: string) => i !== value);
+					}
+				}
+			}
+		}
+	}
+	for (const key in autoMatchConfig) {
+		if (Object.prototype.hasOwnProperty.call(autoMatchConfig, key)) {
+			const value = autoMatchConfig[key];
+			if (Array.isArray(value)) {
+				value.forEach((v) => removeValueFromAutoMatch(v));
+			} else if (typeof value === "string") {
+				removeValueFromAutoMatch(value);
+			}
+		}
+	}
+
+	// merge autoMatchConfig and AUTO_MATCH, if there are duplicate keys, use autoMatchConfig
+	const autoMatch = Object.assign({}, auto_match, autoMatchConfig);
+	const autoMatchKeys = new Set(Object.keys(autoMatch));
+	const matchers: string[] = [];
+	for (const key of autoMatchKeys) {
+		const value = autoMatch[key];
+		if (Array.isArray(value)) {
+			const match = dependencies.filter((dep) => value.includes(dep));
+			if (match.length) {
+				matchers.push(key);
+			}
+		}
+		if (typeof value === "string") {
+			if (dependencies.includes(value)) {
+				matchers.push(key);
+			}
+		}
+	}
+	return matchers;
 }

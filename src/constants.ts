@@ -10,3 +10,11 @@ export const SUPPORT_LINTER = [
 	"stylelint.json",
 ];
 export const SUPPORT_CONFIG_KEYS = ["alias:string", "autoMatch?:boolean"];
+
+export const AUTO_MATCH = {
+	next: "nextjs",
+	react: ["react", "react-dom"],
+	vue: "vue",
+	angular: "angular",
+	jwcjs: "jwcjs",
+};
