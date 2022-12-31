@@ -166,7 +166,7 @@ Now `wlint` supports the following categories to be automatically matched:
 
 You can configure the automatic matching category in the `config.json` file in the **root directory** of the project:
 
-```json
+```json5
 {
   "category": { // custom category matching name
     "react": ["react", "react-dom", "next"]
