@@ -392,7 +392,7 @@ export function autoMatcher(autoMatchConfig?: {
 
 	function removeValueFromAutoMatch(value: string) {
 		for (const k in auto_match) {
-			if (Object.prototype.hasOwnProperty.call(auto_match, k)) {
+			if (k in auto_match) {
 				const val = auto_match[k];
 				if (Array.isArray(val)) {
 					if (val.includes(value)) {
@@ -402,8 +402,9 @@ export function autoMatcher(autoMatchConfig?: {
 			}
 		}
 	}
+
 	for (const key in autoMatchConfig) {
-		if (Object.prototype.hasOwnProperty.call(autoMatchConfig, key)) {
+		if (key in autoMatchConfig) {
 			const value = autoMatchConfig[key];
 			if (Array.isArray(value)) {
 				value.forEach((v) => removeValueFromAutoMatch(v));
