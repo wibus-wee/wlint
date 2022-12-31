@@ -198,7 +198,8 @@ export const main = async (argv: Iminimist) => {
 					data = await getGitHubFile(original, path);
 				}
 				if (fileList.includes("alias.json")) {
-					const id = cache!.files[`${selectCategory}/alias.json`].hex;
+					// 只考虑根目录下配置的 alias
+					const id = cache!.files[`alias.json`].hex;
 					if (isNpm) {
 						alias = await getNpmPackageFile(original, id);
 					} else {
