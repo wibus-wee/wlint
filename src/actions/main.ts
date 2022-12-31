@@ -155,7 +155,8 @@ export const main = async (argv: Iminimist) => {
 		wlintConfig = JSON.parse(wlintConfig);
 	}
 
-	let category: string | undefined = autoMatcher(wlintConfig?.categories);
+	let category: string | undefined =
+		autoMatcher(wlintConfig?.categories) || argv.category;
 
 	if (category && !categories.includes(category)) {
 		console.log(
