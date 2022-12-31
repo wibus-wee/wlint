@@ -9,7 +9,7 @@
 </a>
 </div>
 
-## Feature
+## Features
 
 - ⛏️ [Linting Config Support](#linting-config-support)
 - 😄 [Linting Config Auto Install](#linting-config-auto-install)
