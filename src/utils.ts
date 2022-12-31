@@ -273,7 +273,7 @@ export function checkConflict() {
 		const file = `.${linter.replace(".json", "")}rc`;
 		const files = fs.readdirSync("./");
 		const isConflict = files.some((f) => f.includes(file));
-		if (isConflict) {
+		if (isConflict && !__DEV__) {
 			console.log(
 				`${red("✖")} Please solve ${linter.replace(
 					".json",
