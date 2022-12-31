@@ -31,10 +31,12 @@ export const main = async (argv: Iminimist) => {
 		: [ORIGINAL];
 	const category = argv.category || argv.c || undefined; // 使用的是哪个分类下的配置，如果没有指定的话有两个情况，一个是直接写根目录了全都的配置，这个时候就不需要继续进入文件夹了，一个是只有default分类，那这个情况就用default分类
 
-	try {
-		fs.readFileSync("package.json");
-	} catch (e) {
-		console.log(`${red("✖")} package.json not found`);
+	if (!fs.existsSync("package.json")) {
+		console.log(
+			`${red(
+				"✖"
+			)} package.json not found, are you in the project root directory?`
+		);
 		process.exit(1);
 	}
 
