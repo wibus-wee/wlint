@@ -1,0 +1,5 @@
+{
+  "aliases": {
+    "prettier-config-akrc": "@akrc/prettier-config"
+  }
+}

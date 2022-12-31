@@ -3,7 +3,7 @@ import { CONFIG, SUPPORT_CONFIG_KEYS, SUPPORT_LINTER } from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
-import { red, yellow } from "kolorist";
+import { cyan, red, yellow } from "kolorist";
 
 // only for origin and alias method
 export function isValidateType(_: string[] | undefined) {
@@ -107,6 +107,11 @@ export function parseNpmPackages(json: string, alias: string) {
 	if (aliases) {
 		npmPackages.forEach((item: string, index: number) => {
 			if (aliases[item]) {
+				console.log(
+					`${yellow("⚠")} Alias: ${cyan(item)} -> ${cyan(
+						aliases[item]
+					)}`
+				);
 				npmPackages[index] = aliases[item];
 			}
 		});

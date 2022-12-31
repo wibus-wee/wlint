@@ -185,6 +185,23 @@ export const main = async (argv: Iminimist) => {
 	}
 	fileList = fileList.filter((file) => SUPPORT_LINTER.includes(file));
 
+	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
+
+	let wlintConfig: any;
+	if (fileList.includes("config.json")) {
+		// 只考虑根目录下配置的 alias
+		const id = cache!.files[`config.json`].hex;
+		if (isNpm) {
+			wlintConfig = await getNpmPackageFile(original, id);
+		} else {
+			wlintConfig = await getGitHubFile(
+				original,
+				`${selectCategory}/alias.json`
+			);
+		}
+		wlintConfig = JSON.parse(wlintConfig);
+	}
+
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
 	console.log(`${blue("ℹ")} Configuring linter...`);
@@ -195,26 +212,13 @@ export const main = async (argv: Iminimist) => {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
-				let alias = "";
+				const aliases = wlintConfig?.aliases || {};
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
 					data = await getNpmPackageFile(original, fileId);
 				} else {
 					data = await getGitHubFile(original, path);
-				}
-				console.log(`${blue("ℹ")} Scaning package alias...`);
-				if (fileList.includes("alias.json")) {
-					// 只考虑根目录下配置的 alias
-					const id = cache!.files[`alias.json`].hex;
-					if (isNpm) {
-						alias = await getNpmPackageFile(original, id);
-					} else {
-						alias = await getGitHubFile(
-							original,
-							`${selectCategory}/alias.json`
-						);
-					}
 				}
 				console.log(
 					`${blue("ℹ")} Generating .${linter.replace(
@@ -225,7 +229,7 @@ export const main = async (argv: Iminimist) => {
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(data, alias),
+					packages: parseNpmPackages(data, aliases),
 				});
 				console.log(`${green("✔")} .${linter}rc generated`);
 				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);

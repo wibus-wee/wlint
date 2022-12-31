@@ -19,6 +19,7 @@
 - 🎉 [Custom Linting Config Support](#custom-linting-config-support)
 - 🎁 [Custom Command Alias Support](#custom-command-alias-support)
 - 🎨 [User Config Support](#user-config-support)
+- 📦 [Repository Config Support](#repository-config-support)
 
 ## Install
 
@@ -64,17 +65,21 @@ Then wlint will automatically install the `prettier-config-xxx` package and use 
 
 #### Packages Alias
 
-Sometimes the package name in `require` is not the same as the package name in npm, so we need to configure the alias in `alias.json`:
+Sometimes the package name in `require` is not the same as the package name in npm, so we need to configure the alias in `config.json`:
 
 ```json
 {
-  "eslint-config-xxx": "@xxx/eslint-config-xxx"
+  "aliases": {
+    "prettier-config-akrc": "@akrc/prettier-config"
+  }
 }
 ```
 
-Save the above configuration in the `alias.json` file in the **root directory** of the project, and then `wlint` will automatically scan the package list and install the right package according to the alias. 
+Save the above configuration in the `config.json` file in the **root directory** of the project, and then `wlint` will automatically scan the package list and install the right package according to the alias. 
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
+
+If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
 
 ## Linting Config Auto Install
 
@@ -151,11 +156,13 @@ If you don't specify the category, `wlint` will automatically match the category
 
 In the above example, `wlint` will automatically match the `nextjs` category. If `nextjs` category does not exist, `wlint` will try to match the `react` category, and so on.
 
-You should open the `autoMatch` option in wlint config to enable the automatic matching category. If you want to learn more about wlint config, you can see the [User Config Support](#user-config-support) section.
+You should open the `autoMatch` option in wlint config to enable the automatic matching category. 
 
 ```bash
 wlint config set autoMatch true
 ```
+
+If you want to learn more about wlint config, you can see the [User Config Support](#user-config-support) section.
 
 Now `wlint` supports the following categories to be automatically matched:
 
@@ -163,6 +170,19 @@ Now `wlint` supports the following categories to be automatically matched:
 - [react](https://reactjs.org/)
 - [vue](https://vuejs.org/)
 - [jwcjs](https://jwc.js.org/)
+
+You can configure the automatic matching category in the `config.json` file in the **root directory** of the project:
+
+```json5
+{
+  "category": { // custom category matching name
+    "react": ["react", "react-dom", "next"]
+    // if the project has react / react-dom / next package, wlint will match the `react` category
+  }
+}
+```
+
+If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
 
 ## Custom Command Alias Support
 
@@ -203,6 +223,28 @@ wlint config remove alias ww
 wlint config set autoMatch true
 wlint config remove autoMatch
 ```
+
+## Repository Config Support
+
+`wlint` have a repository config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the repository config file.
+
+You should create a `config.json` file in the root directory of your project, and then you can configure the repository config in the `config.json` file. For example:
+
+```json5
+{
+  "aliases": { // package alias
+    "prettier-config-akrc": "@akrc/prettier-config"
+  },
+  "category": { // custom category matching name
+    "react": ["react", "react-dom", "next"]
+  }
+}
+```
+
+Now wlint supports the following configuration items:
+
+- **aliases**: [package alias](#custom-linting-config-support)
+- **category**: [custom category matching name](#automatic-matching-category)
 
 ## License
 
