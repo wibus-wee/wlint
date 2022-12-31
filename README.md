@@ -234,10 +234,10 @@ You should create a `config.json` file in the root directory of your project, an
 }
 ```
 
-Now `wlint` supports the following configuration items:
+Now wlint supports the following configuration items:
 
-- `aliases`: [package alias](#custom-linting-config-support)
-- `category`: [custom category matching name](#automatic-matching-category)
+- **aliases**: [package alias](#custom-linting-config-support)
+- **category**: [custom category matching name](#automatic-matching-category)
 
 ## License
 
