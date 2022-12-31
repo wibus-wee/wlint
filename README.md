@@ -30,7 +30,7 @@ npm i -g wlint
 ## Usage
 
 ```bash
-wlint # Quickly start linting
+wlint # Quickly config your project linters.
 wlint -c <category> # Use the config in the category
 ```
 
