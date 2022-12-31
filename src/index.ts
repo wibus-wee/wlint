@@ -1,7 +1,7 @@
 import minimist from "minimist";
-import { alias } from "./alias";
-import { origin } from "./origin";
-import { main } from "./main";
+import { alias } from "./actions/alias";
+import { origin } from "./actions/origin";
+import { main } from "./actions/main";
 import { Iminimist } from "./types";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });

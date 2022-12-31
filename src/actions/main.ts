@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import { blue, green, red } from "kolorist";
 import prompts from "prompts";
-import { ORIGINAL, SUPPORT_LINTER } from "./constants";
-import { Iminimist, InpmPackages, NPMFiles } from "./types";
+import { ORIGINAL, SUPPORT_LINTER } from "../constants";
+import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
 	checkConflict,
 	configFile,
@@ -15,7 +15,7 @@ import {
 	isNpmPackage,
 	parseNpmPackages,
 	setConfig,
-} from "./utils";
+} from "../utils";
 import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {

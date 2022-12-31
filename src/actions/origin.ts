@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
-import { Iminimist } from "./types";
-import { configFile, isValidateType } from "./utils";
-import { CONFIG } from "./constants";
+import { Iminimist } from "../types";
+import { configFile, isValidateType } from "../utils";
+import { CONFIG } from "../constants";
 
 function setConfig(
 	type: string,

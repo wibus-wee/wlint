@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import { blue, cyan, green, red } from "kolorist";
 import prompts from "prompts";
-import { Iminimist } from "./types";
-import { configFile, getShell, getUserHome, isValidateType } from "./utils";
-import { CONFIG } from "./constants";
+import { Iminimist } from "../types";
+import { configFile, getShell, getUserHome, isValidateType } from "../utils";
+import { CONFIG } from "../constants";
 
 function consoleSource(filename: string) {
 	console.log(`\nYou should restart your terminal to apply the changes`);
