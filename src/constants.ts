@@ -12,7 +12,7 @@ export const SUPPORT_LINTER = [
 export const SUPPORT_CONFIG_KEYS = ["alias:string", "autoMatch?:boolean"];
 
 export const AUTO_MATCH = {
-	next: "nextjs",
+	nextjs: "next",
 	react: ["react", "react-dom"],
 	vue: "vue",
 	angular: "angular",

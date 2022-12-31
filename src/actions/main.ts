@@ -1,9 +1,10 @@
 import fs from "node:fs";
-import { blue, green, red } from "kolorist";
+import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
 import { ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
+	autoMatcher,
 	checkConflict,
 	configFile,
 	detectPkgManage,
@@ -29,7 +30,7 @@ export const main = async (argv: Iminimist) => {
 		: argv.original
 		? [argv.original]
 		: [ORIGINAL];
-	const category = argv.category || argv.c || undefined; // 使用的是哪个分类下的配置，如果没有指定的话有两个情况，一个是直接写根目录了全都的配置，这个时候就不需要继续进入文件夹了，一个是只有default分类，那这个情况就用default分类
+	let category = autoMatcher() || argv.category || argv.c || undefined; // 使用的是哪个分类下的配置，如果没有指定的话有两个情况，一个是直接写根目录了全都的配置，这个时候就不需要继续进入文件夹了，一个是只有default分类，那这个情况就用default分类
 
 	if (!fs.existsSync("package.json")) {
 		console.log(
@@ -141,6 +142,15 @@ export const main = async (argv: Iminimist) => {
 
 	// console.log(blue("ℹ"), "Categories:", categories.join(", "));
 	// console.log(blue("ℹ"), "Files:", fileList.join(", "));
+
+	if (category && !categories.includes(category)) {
+		console.log(
+			`${yellow(
+				"⚠"
+			)} Auto match category ${category} not found, turn to select`
+		);
+		category = undefined; // reset category
+	}
 
 	const selectFileList = await prompts(
 		[
