@@ -5,7 +5,7 @@ import {
 	SUPPORT_CONFIG_KEYS,
 	SUPPORT_LINTER,
 } from "./constants";
-import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
+import { GitHubFiles, InpmPackages, NPMFiles, NpmPackage } from "./types";
 import https from "node:https";
 import path from "node:path";
 import { blue, cyan, red, yellow } from "kolorist";
@@ -139,7 +139,7 @@ export function parseNpmPackages(linter: string, json: string, alias: string) {
 // https://www.npmjs.com/package/{name}/v/{version}/index To get the file details
 // https://registry.npmjs.org/{name} To get the package details, the latest version is in the dist-tags.latest
 
-export function getNpmPackageInfo(name: string) {
+export function getNpmPackageInfo(name: string): Promise<NpmPackage> {
 	return new Promise((resolve, reject) => {
 		https.get(`https://registry.npmjs.org/${name}`, (res: any) => {
 			let data = "";

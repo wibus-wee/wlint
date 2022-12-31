@@ -91,7 +91,7 @@ export const main = async (argv: Iminimist) => {
 	let fileList: Array<string> = [];
 	let cache: NPMFiles;
 	if (isNpm) {
-		const latest = getNpmPackageInfo(original)?.["dist-tags"]?.latest;
+		const latest = (await getNpmPackageInfo(original))["dist-tags"].latest;
 		if (!latest) {
 			throw new Error(`${red("✖")} Package not found`);
 		}
