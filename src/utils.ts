@@ -96,7 +96,7 @@ export function isNpmPackage(name: string) {
 }
 
 // parse npm packages from eslint and prettier config file to install
-export function parseNpmPackages(json: string, alias: string) {
+export function parseNpmPackages(linter: string, json: string, alias: string) {
 	const parsed = JSON.parse(JSON.stringify(json));
 	const aliases = JSON.parse(alias);
 	const npmPackages = [
@@ -108,6 +108,17 @@ export function parseNpmPackages(json: string, alias: string) {
 	];
 	if (json.includes("@typescript-eslint")) {
 		npmPackages.push("@typescript-eslint/eslint-plugin");
+	}
+	switch (linter) {
+		case "eslint.json":
+			npmPackages.push("eslint");
+			break;
+		case "prettier.json":
+			npmPackages.push("prettier");
+			break;
+		case "stylelint.json":
+			npmPackages.push("stylelint");
+			break;
 	}
 	if (aliases) {
 		npmPackages.forEach((item: string, index: number) => {

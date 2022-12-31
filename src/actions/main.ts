@@ -241,7 +241,7 @@ export const main = async (argv: Iminimist) => {
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(data, aliases),
+					packages: parseNpmPackages(linter, data, aliases),
 				});
 				console.log(`${green("✔")} .${linter}rc generated`);
 				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
