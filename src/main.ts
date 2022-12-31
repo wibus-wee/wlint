@@ -189,12 +189,25 @@ export const main = async (argv: Iminimist) => {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
+				let alias = "";
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
 					data = await getNpmPackageFile(original, fileId);
 				} else {
 					data = await getGitHubFile(original, path);
+				}
+				if (fileList.includes("alias.json")) {
+					// 只考虑根目录下配置的 alias
+					const id = cache!.files[`alias.json`].hex;
+					if (isNpm) {
+						alias = await getNpmPackageFile(original, id);
+					} else {
+						alias = await getGitHubFile(
+							original,
+							`${selectCategory}/alias.json`
+						);
+					}
 				}
 				console.log(
 					`${blue("ℹ")} Generating .${linter.replace(
@@ -205,7 +218,7 @@ export const main = async (argv: Iminimist) => {
 				generateLinterRcFile(linter, data, npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(data),
+					packages: parseNpmPackages(data, alias),
 				});
 				console.log(`${green("✔")} .${linter}rc generated`);
 				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);

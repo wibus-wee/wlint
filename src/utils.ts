@@ -56,8 +56,9 @@ export function isNpmPackage(name: string) {
 }
 
 // parse npm packages from eslint and prettier config file to install
-export function parseNpmPackages(json: string) {
+export function parseNpmPackages(json: string, alias: string) {
 	const parsed = JSON.parse(JSON.stringify(json));
+	const aliases = JSON.parse(alias);
 	const npmPackages = [
 		...(parsed.extends?.filter((plugin: string) => isNpmPackage(plugin)) ||
 			[]), // eslint and prettier(extends)
@@ -67,6 +68,13 @@ export function parseNpmPackages(json: string) {
 	];
 	if (json.includes("@typescript-eslint")) {
 		npmPackages.push("@typescript-eslint/eslint-plugin");
+	}
+	if (aliases) {
+		npmPackages.forEach((item: string, index: number) => {
+			if (aliases[item]) {
+				npmPackages[index] = aliases[item];
+			}
+		});
 	}
 	return npmPackages;
 }
@@ -265,7 +273,7 @@ export function checkConflict() {
 		const file = `.${linter.replace(".json", "")}rc`;
 		const files = fs.readdirSync("./");
 		const isConflict = files.some((f) => f.includes(file));
-		if (isConflict) {
+		if (isConflict && !__DEV__) {
 			console.log(
 				`${red("✖")} Please solve ${linter.replace(
 					".json",
