@@ -219,7 +219,7 @@ wlint config remove autoMatch
 
 ## Repository Config Support
 
-`wlint` have a repository config file to configure the linter config, for example: `package alias`, `custom category matching name`... It provides a more flexible configuration method.
+`wlint` have a repository config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the repository config file.
 
 You should create a `config.json` file in the root directory of your project, and then you can configure the repository config in the `config.json` file. For example:
 
@@ -233,6 +233,11 @@ You should create a `config.json` file in the root directory of your project, an
   }
 }
 ```
+
+Now `wlint` supports the following configuration items:
+
+- `aliases`: [package alias](#custom-linting-config-support)
+- `category`: [custom category matching name](#automatic-matching-category)
 
 ## License
 
