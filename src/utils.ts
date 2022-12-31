@@ -372,6 +372,9 @@ export function isKeyValid(key: string, value: any) {
 export function autoMatcher(autoMatchConfig?: {
 	[key: string]: string[] | string;
 }) {
+	if (!configFile?.autoMatch) {
+		return undefined;
+	}
 	if (!fs.existsSync(path.resolve(process.cwd(), "package.json"))) {
 		console.log(`${red("✖")} Please run this command in a project folder`);
 		process.exit(1);
