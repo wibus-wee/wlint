@@ -8,7 +8,7 @@ import {
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
-import { cyan, red, yellow } from "kolorist";
+import { blue, cyan, red, yellow } from "kolorist";
 
 // only for origin and alias method
 export function isValidateType(_: string[] | undefined) {
@@ -372,6 +372,9 @@ export function isKeyValid(key: string, value: any) {
 export function autoMatcher(autoMatchConfig?: {
 	[key: string]: string[] | string;
 }) {
+	if (!configFile?.autoMatch) {
+		return undefined;
+	}
 	if (!fs.existsSync(path.resolve(process.cwd(), "package.json"))) {
 		console.log(`${red("✖")} Please run this command in a project folder`);
 		process.exit(1);
@@ -432,5 +435,16 @@ export function autoMatcher(autoMatchConfig?: {
 			}
 		}
 	}
-	return matchers;
+	if (matchers.length > 1) {
+		console.log(
+			`${red("✖")} Multiple category match, please specify category`
+		);
+		process.exit(1);
+	}
+	if (matchers.length) {
+		console.log(
+			`${blue("ℹ")} Auto match ${yellow(matchers.join(""))} category`
+		);
+	}
+	return matchers.join("");
 }

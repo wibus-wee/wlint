@@ -166,21 +166,23 @@ If you want to learn more about wlint config, you can see the [User Config Suppo
 
 Now `wlint` supports the following categories to be automatically matched:
 
-- [nextjs](https://nextjs.org/)
-- [react](https://reactjs.org/)
-- [vue](https://vuejs.org/)
-- [jwcjs](https://jwc.js.org/)
+- [nextjs](https://nextjs.org/) - next
+- [react](https://reactjs.org/) - react, react-dom
+- [vue](https://vuejs.org/) - vue
+- [jwcjs](https://jwc.js.org/) - jwcjs
+- [angular](https://angular.io/) - angular
 
 You can configure the automatic matching category in the `config.json` file in the **root directory** of the project:
 
 ```json5
 {
-  "category": { // custom category matching name
+  "categories": {
     "react": ["react", "react-dom", "next"]
-    // if the project has react / react-dom / next package, wlint will match the `react` category
   }
 }
 ```
+
+In default, wlint will match the `nextjs` category if the project has `next` package. But in the above example, wlint will match the `react` category if the project has `next` package.
 
 If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
 

@@ -1,9 +1,10 @@
 import fs from "node:fs";
-import { blue, green, red } from "kolorist";
+import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
 import { ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
+	autoMatcher,
 	checkConflict,
 	configFile,
 	detectPkgManage,
@@ -29,7 +30,6 @@ export const main = async (argv: Iminimist) => {
 		: argv.original
 		? [argv.original]
 		: [ORIGINAL];
-	const category = argv.category || argv.c || undefined; // 使用的是哪个分类下的配置，如果没有指定的话有两个情况，一个是直接写根目录了全都的配置，这个时候就不需要继续进入文件夹了，一个是只有default分类，那这个情况就用default分类
 
 	if (!fs.existsSync("package.json")) {
 		console.log(
@@ -108,6 +108,9 @@ export const main = async (argv: Iminimist) => {
 					categories.push(category);
 				}
 			}
+			if (key === "config.json") {
+				fileList.push(key);
+			}
 		});
 
 		if (categories.length === 0) {
@@ -115,15 +118,15 @@ export const main = async (argv: Iminimist) => {
 				const file = key.split("/")[1];
 				fileList.push(file);
 			});
-			fileList = fileList.filter(
-				(file) => !SUPPORT_LINTER.includes(file)
-			);
 		}
 	} else {
 		const list = await getGitHubFiles(original);
 		list.forEach((file) => {
 			if (file.type === "dir") {
 				categories.push(file.name);
+			}
+			if (file.type === "file" || file.name === "config.json") {
+				fileList.push(file.name);
 			}
 		});
 
@@ -133,14 +136,35 @@ export const main = async (argv: Iminimist) => {
 					fileList.push(file.name);
 				}
 			});
-			fileList = fileList.filter(
-				(file) => !SUPPORT_LINTER.includes(file)
-			);
 		}
 	}
 
-	// console.log(blue("ℹ"), "Categories:", categories.join(", "));
-	// console.log(blue("ℹ"), "Files:", fileList.join(", "));
+	fileList = fileList.filter(
+		(file) => SUPPORT_LINTER.includes(file) || file === "config.json"
+	);
+
+	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
+	let wlintConfig: any;
+	if (fileList.includes("config.json")) {
+		const id = cache!.files[`config.json`].hex;
+		if (isNpm) {
+			wlintConfig = await getNpmPackageFile(original, id);
+		} else {
+			wlintConfig = await getGitHubFile(original, `config.json`);
+		}
+		wlintConfig = JSON.parse(wlintConfig);
+	}
+
+	let category: string | undefined = autoMatcher(wlintConfig?.categories);
+
+	if (category && !categories.includes(category)) {
+		console.log(
+			`${yellow(
+				"⚠"
+			)} Auto match category ${category} not found, turn to select`
+		);
+		category = undefined; // reset category
+	}
 
 	const selectFileList = await prompts(
 		[
@@ -185,24 +209,9 @@ export const main = async (argv: Iminimist) => {
 			}
 		});
 	}
-	fileList = fileList.filter((file) => SUPPORT_LINTER.includes(file));
-
-	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-
-	let wlintConfig: any;
-	if (fileList.includes("config.json")) {
-		// 只考虑根目录下配置的 alias
-		const id = cache!.files[`config.json`].hex;
-		if (isNpm) {
-			wlintConfig = await getNpmPackageFile(original, id);
-		} else {
-			wlintConfig = await getGitHubFile(
-				original,
-				`${selectCategory}/alias.json`
-			);
-		}
-		wlintConfig = JSON.parse(wlintConfig);
-	}
+	fileList = fileList.filter(
+		(file) => SUPPORT_LINTER.includes(file) || file === "config.json"
+	);
 
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
