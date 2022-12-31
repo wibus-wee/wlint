@@ -1,14 +1,49 @@
 import fs from "node:fs";
-import { CONFIG, SUPPORT_LINTER } from "./constants";
+import { CONFIG, SUPPORT_CONFIG_KEYS, SUPPORT_LINTER } from "./constants";
 import { GitHubFiles, InpmPackages, NPMFiles } from "./types";
 import https from "node:https";
 import path from "node:path";
 import { red, yellow } from "kolorist";
 
-// only for config and alias method
+// only for origin and alias method
 export function isValidateType(_: string[] | undefined) {
 	if (!_ || !(_[1] === "add" || _[1] === "remove")) {
-		throw new Error(`${red("✖")} Invalid type`);
+		console.log(`${red("✖")} Invalid type`);
+		process.exit(1);
+	}
+}
+
+// only for config method
+export function isValidateConfigType(_: string[] | undefined) {
+	if (
+		!_ ||
+		!(
+			_[1] === "set" ||
+			_[1] === "get" ||
+			_[1] === "remove" ||
+			_[1] === "list"
+		)
+	) {
+		console.log(
+			`${red("✖")} You have not entered a action: set|get|remove|list`
+		);
+		process.exit(1);
+	}
+	if (_[1] !== "list" && !_[2]) {
+		console.log(`${red("✖")} You have not entered a key`);
+		process.exit(1);
+	}
+	if (_[1] !== "list" && !isKeySupported(_[2])) {
+		console.log(
+			`${red(
+				"✖"
+			)} Invalid key, supported keys: ${SUPPORT_CONFIG_KEYS.join(", ")}`
+		);
+		process.exit(1);
+	}
+	if (_[1] !== "list" && _[1] !== "get" && !isKeyValid(_[2], _[3])) {
+		console.log(`${red("✖")} Invalid value type `);
+		process.exit(1);
 	}
 }
 
@@ -283,4 +318,43 @@ export function checkConflict() {
 			process.exit(1);
 		}
 	}
+}
+
+export function transformValue(value: any) {
+	if (typeof value === "string") {
+		try {
+			return JSON.parse(value);
+		} catch (error) {
+			return value;
+		}
+	}
+	return value;
+}
+
+export function getConfigKeys() {
+	const keys = SUPPORT_CONFIG_KEYS;
+	const configKeys = keys.map((key) => {
+		const [k, t] = key.split(":");
+		return {
+			key: k.replace("?", ""),
+			type: t,
+			optional: k.includes("?"),
+		};
+	});
+	return configKeys;
+}
+
+export function isKeySupported(key: string) {
+	const keys = getConfigKeys();
+	return keys.some((k) => k.key === key);
+}
+
+export function isKeyValid(key: string, value: any) {
+	const keys = getConfigKeys();
+	const k = keys.find((k) => k.key === key);
+	if (!k) return false; // if key is not exist in SUPPORT_CONFIG_KEYS
+	const type = k.type;
+	if (k.optional && !value) return true;
+	if (typeof transformValue(value) !== type) return false;
+	return true;
 }
