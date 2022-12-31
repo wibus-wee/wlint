@@ -248,10 +248,10 @@ Now wlint supports the following configuration items:
 
 ## License
 
-This project AGPLv3 license open source, the use of this project for secondary creation or derivative projects must also be open source.
+This project open source under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Author
 
-wlint © Wibus, Released under the AGPL-3.0 License. 
+wlint © Wibus, Released under the MIT License. 
 
 > [Personal Website](http://iucky.cn/) · [Blog](https://blog.iucky.cn/) · GitHub [@wibus-wee](https://github.com/wibus-wee/) · Telegram [@wibus✪](https://t.me/wibus_wee)
