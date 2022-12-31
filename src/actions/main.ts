@@ -203,6 +203,7 @@ export const main = async (argv: Iminimist) => {
 				} else {
 					data = await getGitHubFile(original, path);
 				}
+				console.log(`${blue("ℹ")} Scaning package alias...`);
 				if (fileList.includes("alias.json")) {
 					// 只考虑根目录下配置的 alias
 					const id = cache!.files[`alias.json`].hex;
