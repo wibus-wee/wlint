@@ -57,12 +57,11 @@ function setConfig(
 	}
 }
 
-export const config = async (argv: Iminimist) => {
+export const origin = async (argv: Iminimist) => {
 	isValidateType(argv._);
 	const res = await prompts(
 		[
 			{
-				// @ts-ignore - I have validated the type in `isValidateType` function.
 				type: !argv._[2] ? "text" : null,
 				name: "original",
 				message: "Enter the original repository",
@@ -77,10 +76,8 @@ export const config = async (argv: Iminimist) => {
 		}
 	);
 
-	// @ts-ignore - I have validated the type in `isValidateType` function.
 	const original = argv._[2] || res.original;
 	const originalConfig = configFile;
 
-	// @ts-ignore - I have validated the type in `isValidateType` function.
 	setConfig(argv._[1], originalConfig, original);
 };
