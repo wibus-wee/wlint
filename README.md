@@ -12,7 +12,7 @@
 ## Feature
 
 - ⛏️ [Linting Config Support](#linting-config-support)
-- 😄 Linting Config Auto Install
+- 😄 [Linting Config Auto Install](#linting-config-auto-install)
 - 🤖️ [Quickly linting](#quickly-linting)
 - 🍰 [Linting Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
@@ -75,6 +75,13 @@ Sometimes the package name in `require` is not the same as the package name in n
 Save the above configuration in the `alias.json` file in the **root directory** of the project, and then `wlint` will automatically scan the package list and install the right package according to the alias. 
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
+
+## Linting Config Auto Install
+
+wlint will automatically install the linter config package according to the linter config file. And you don't need to install the linter config package by yourself, wlint will analyze which package you need to install, and then install it automatically.
+
+If the package has alias, you should configure the alias in `config.json` file (see [Packages Alias](#packages-alias) section).
+
 
 ## Quickly linting
 
