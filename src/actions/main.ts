@@ -9,14 +9,16 @@ import {
 	configFile,
 	detectPkgManage,
 	generateLinterRcFile,
+	isNpmPackage,
+	parseNpmPackages,
+} from "../utils";
+import {
 	getGitHubFile,
 	getGitHubFiles,
 	getNpmPackageFile,
 	getNpmPackageFiles,
 	getNpmPackageInfo,
-	isNpmPackage,
-	parseNpmPackages,
-} from "../utils";
+} from "../request";
 import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {
@@ -91,7 +93,7 @@ export const main = async (argv: Iminimist) => {
 	let fileList: Array<string> = [];
 	let cache: NPMFiles;
 	if (isNpm) {
-		const latest = getNpmPackageInfo(original)?.["dist-tags"]?.latest;
+		const latest = (await getNpmPackageInfo(original))["dist-tags"].latest;
 		if (!latest) {
 			throw new Error(`${red("✖")} Package not found`);
 		}
