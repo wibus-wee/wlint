@@ -98,7 +98,11 @@ You can quickly lint your project by running the following command:
 wlint lint
 ```
 
-`wlint` will automatically lint your project according to linter config.
+`wlint` will automatically lint your project according to linter config. If you want to fix the linting errors, you can run the following command:
+
+```bash
+wlint lint fix
+```
 
 > But make sure you have installed the linter by `wlint`, you have better don't install the linter by yourself. It maybe cause some problems.
 
