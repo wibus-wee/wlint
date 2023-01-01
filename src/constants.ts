@@ -8,6 +8,7 @@ export const SUPPORT_LINTER = [
 	"eslint.json",
 	"prettier.json",
 	"stylelint.json",
+	"commitlint.json",
 ];
 export const SUPPORT_CONFIG_KEYS = ["alias:string", "autoMatch?:boolean"];
 

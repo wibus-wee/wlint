@@ -100,10 +100,12 @@ export function parseNpmPackages(linter: string, json: string, alias: string) {
 	const aliases = JSON.parse(alias);
 	const npmPackages = [
 		...(parsed.extends?.filter((plugin: string) => isNpmPackage(plugin)) ||
-			[]), // eslint and prettier(extends)
+			[]), // eslint, prettier(extra extends), stylelint
 		...(parsed.plugins?.filter((plugin: string) => isNpmPackage(plugin)) ||
 			[]), // eslint
 		...(parsed.parser || []), // eslint(only one, @typescript-eslint/parser)
+		...(parsed.parserPreset || []), // commitlint
+		...(parsed.formatter || []), // stylelint
 	];
 	if (json.includes("@typescript-eslint")) {
 		npmPackages.push("@typescript-eslint/eslint-plugin");
@@ -117,6 +119,9 @@ export function parseNpmPackages(linter: string, json: string, alias: string) {
 			break;
 		case "stylelint.json":
 			npmPackages.push("stylelint");
+			break;
+		case "commitlint.json":
+			npmPackages.push("@commitlint/cli");
 			break;
 	}
 	if (aliases) {
