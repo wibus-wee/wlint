@@ -23,3 +23,5 @@ export const AUTO_MATCH = {
 	angular: "angular",
 	jwcjs: "jwcjs",
 };
+
+export const IGNORE_DIRS = ["node_modules"];

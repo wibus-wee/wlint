@@ -109,7 +109,7 @@ export const main = async (argv: Iminimist) => {
 		configOriginals.length > 1 ? res.original : configOriginals[0];
 	console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
 	const isNpm = isNpmPackage(original);
-	const categories: Array<string> = [];
+	let categories: Array<string> = [];
 	let fileList: Array<string> = [];
 	let cache: NPMFiles;
 	if (isNpm) {
@@ -160,6 +160,11 @@ export const main = async (argv: Iminimist) => {
 			});
 		}
 	}
+
+	categories = categories.filter((category) => category.includes("."));
+	categories = categories.filter(
+		(category) => !IGNORE_DIRS.includes(category)
+	);
 
 	fileList = fileList.filter(
 		(file) => SUPPORT_LINTER.includes(file) || file === "config.json"
