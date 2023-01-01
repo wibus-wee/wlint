@@ -22,7 +22,7 @@ export const SUPPORT_WLINTRC_KEYS = [
 
 export const AUTO_MATCH = {
 	nextjs: "next",
-	react: ["react", "react-dom"],
+	react: "react",
 	vue: "vue",
 	angular: "angular",
 	jwcjs: "jwcjs",

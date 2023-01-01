@@ -184,7 +184,7 @@ If you want to learn more about wlint config, you can see the [User Config Suppo
 Now `wlint` supports the following categories to be automatically matched:
 
 - [nextjs](https://nextjs.org/) - next
-- [react](https://reactjs.org/) - react, react-dom
+- [react](https://reactjs.org/) - react
 - [vue](https://vuejs.org/) - vue
 - [jwcjs](https://jwc.js.org/) - jwcjs
 - [angular](https://angular.io/) - angular
