@@ -14,7 +14,11 @@ export const SUPPORT_CONFIG_KEYS = [
 	"autoMatch?:boolean",
 	"origins?:string[]|string",
 ];
-export const SUPPORT_WLINTRC_KEYS = ["origin:string", "category:string"];
+export const SUPPORT_WLINTRC_KEYS = [
+	"origin:string",
+	"category?:string",
+	"packages?:string[]",
+];
 
 export const AUTO_MATCH = {
 	nextjs: "next",
