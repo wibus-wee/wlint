@@ -8,9 +8,18 @@ export async function config(argv: Iminimist) {
 
 	const action = argv._[1];
 	const key = argv._[2];
-	const value = argv._[3];
-	const config = userConfig;
+	const value = argv._[3].split(",").map((_) => _.trim());
+	if (Array.isArray(value)) {
+		value.forEach((v) => {
+			switcher(action, key, v);
+		});
+	} else {
+		switcher(action, key, value);
+	}
+}
 
+function switcher(action: string, key: string, value: string) {
+	const config = userConfig;
 	switch (action) {
 		case "set":
 			if (config[key] && config[key].includes(value)) {
