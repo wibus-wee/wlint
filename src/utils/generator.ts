@@ -3,7 +3,7 @@ import { InpmPackages } from "../types";
 
 export function generatePrettierrcFile(json: string, npmPkgs?: InpmPackages) {
 	const pkgs = npmPkgs?.packages;
-	const jsons = JSON.parse(json);
+	const jsons = JSON.parse(JSON.stringify(json));
 	const prettierrc = `
 module.exports = {
 	${Object.keys(jsons).map((key) => {
@@ -33,6 +33,5 @@ export function generateLinterRcFile(
 		);
 		return;
 	}
-
 	fs.writeFileSync(`./.${linter.replace(".json", "")}rc.json`, json);
 }

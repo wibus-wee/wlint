@@ -14,7 +14,7 @@ export function isNpmPackage(name: string) {
 // parse npm packages from eslint and prettier config file to install
 export function parseNpmPackages(linter: string, json: string, alias: string) {
 	const parsed = JSON.parse(JSON.stringify(json));
-	const aliases = JSON.parse(alias);
+	const aliases = JSON.parse(JSON.stringify(alias));
 	const npmPackages = [
 		...(parsed.extends?.filter((plugin: string) => isNpmPackage(plugin)) ||
 			[]), // eslint, prettier(extra extends), stylelint
