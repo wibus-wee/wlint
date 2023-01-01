@@ -6,10 +6,10 @@ import { red } from "kolorist";
  * @param exit - Whether to exit the process
  */
 export function boom(message: string, exit = true) {
-	console.error(`${red("✖")} ${message}`);
-	if (exit) process.exit(1);
+  console.error(`${red("✖")} ${message}`);
+  if (exit) process.exit(1);
 }
 
 export function promptsOnCancel() {
-	boom("Operation cancelled");
+  boom("Operation cancelled");
 }

@@ -1,4 +1,3 @@
-
 {
   "$schema": "https://json.schemastore.org/eslintrc",
   "extends": ["@innei/eslint-config-react-ts"],

@@ -52,8 +52,8 @@ Normally, if we want to use [Prettier Sharing configurations](https://prettier.i
 
 ```js
 module.exports = {
-  ...require('@xxx/prettier-config-xxx'),
-}
+  ...require("@xxx/prettier-config-xxx"),
+};
 ```
 
 But in wlint, we should use `json` format, and the `require` function is not supported in `json` format, so we need to use the following format:
@@ -78,7 +78,7 @@ Sometimes the package name in `require` is not the same as the package name in n
 }
 ```
 
-Save the above configuration in the `config.json` file in the **root directory** of the project, and then `wlint` will automatically scan the package list and install the right package according to the alias. 
+Save the above configuration in the `config.json` file in the **root directory** of the project, and then `wlint` will automatically scan the package list and install the right package according to the alias.
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
 
@@ -89,7 +89,6 @@ If you want to learn more about the `config.json` file, please see the [Origin C
 wlint will automatically install the linter config package according to the linter config file. And you don't need to install the linter config package by yourself, wlint will analyze which package you need to install, and then install it automatically.
 
 If the package has alias, you should configure the alias in `config.json` file (see [Packages Alias](#packages-alias) section).
-
 
 ## Quickly Lint
 
@@ -139,6 +138,7 @@ wlint origin remove <your config origin repository name>
 # wlint origin remove wibus-wee/wlint-config
 # wlint origin remove @wibus-wee/wlint-config
 ```
+
 3. Then you can use your config origin in your project!
 
 ### Config Category
@@ -173,7 +173,7 @@ If you don't specify the category, `wlint` will automatically match the category
 
 In the above example, `wlint` will automatically match the `nextjs` category. If `nextjs` category does not exist, `wlint` will try to match the `react` category, and so on.
 
-You should open the `autoMatch` option in wlint config to enable the automatic matching category. 
+You should open the `autoMatch` option in wlint config to enable the automatic matching category.
 
 ```bash
 wlint config set autoMatch true
@@ -193,9 +193,9 @@ You can configure the automatic matching category in the `config.json` file in t
 
 ```json5
 {
-  "categories": {
-    "react": ["react", "react-dom", "next"]
-  }
+  categories: {
+    react: ["react", "react-dom", "next"],
+  },
 }
 ```
 
@@ -245,16 +245,16 @@ wlint config remove autoMatch
 
 ## Repository Config Support
 
-`wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file. 
+`wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file.
 
 But in common, you have no need to **(have better not)** configure the .wlintrc file, because wlint will automatically configure the .wlintrc file according to the project. If you setup the `.wlintrc` file but add the wrong configuration, wlint will warn you when you use wlint.
 
-When you init linter with lint, wlint will automatically record the config origin and some other information in the `.wlintrc` file. 
+When you init linter with lint, wlint will automatically record the config origin and some other information in the `.wlintrc` file.
 
 ```json5
 {
-  "origin": "wibus-wee/wlint-config",
-  "category": "nextjs",
+  origin: "wibus-wee/wlint-config",
+  category: "nextjs",
 }
 ```
 
@@ -268,12 +268,14 @@ You should create a `config.json` file in the root directory of your project, an
 
 ```json5
 {
-  "aliases": { // package aliases
-    "prettier-config-akrc": "@akrc/prettier-config"
+  aliases: {
+    // package aliases
+    "prettier-config-akrc": "@akrc/prettier-config",
   },
-  "categories": { // custom category matching names
-    "react": ["react", "react-dom", "next"]
-  }
+  categories: {
+    // custom category matching names
+    react: ["react", "react-dom", "next"],
+  },
 }
 ```
 
@@ -293,13 +295,12 @@ Now wlint supports the following configuration items:
   </tbody>
 </table>
 
-
 ## License
 
 This project open source under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Author
 
-wlint © Wibus, Released under the MIT License. 
+wlint © Wibus, Released under the MIT License.
 
 > [Personal Website](http://iucky.cn/) · [Blog](https://blog.iucky.cn/) · GitHub [@wibus-wee](https://github.com/wibus-wee/) · Telegram [@wibus✪](https://t.me/wibus_wee)
