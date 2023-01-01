@@ -244,7 +244,7 @@ wlint config remove autoMatch
 
 `wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file. 
 
-But in common, you have no need to **(have better not)** configure the .wlintrc file, because wlint will automatically configure the .wlintrc file according to the project.
+But in common, you have no need to **(have better not)** configure the .wlintrc file, because wlint will automatically configure the .wlintrc file according to the project. If you setup the `.wlintrc` file but add the wrong configuration, wlint will warn you when you use wlint.
 
 When you init linter with lint, wlint will automatically record the config origin and some other information in the `.wlintrc` file. 
 
@@ -252,7 +252,6 @@ When you init linter with lint, wlint will automatically record the config origi
 {
   "origin": "wibus-wee/wlint-config",
   "category": "nextjs",
-  // ...more config
 }
 ```
 
