@@ -13,6 +13,7 @@
 
 - ⛏️ [Linter Configs Support](#linter-configs-support)
 - 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
+- 🌮 [Packages Alias](#packages-alias)
 - 🤖️ [Quickly Lint](#quickly-lint)
 - 🔧 [Automatic Update Linters](#automatic-update-linters)
 - 🍰 [Linter Config Category](#config-category)
@@ -36,7 +37,7 @@ wlint # Quickly config your project linters.
 wlint -c <category> # Use the config in the category
 ```
 
-## Linters Config Support
+## Linter Configs Support
 
 - [x] ESLint (eslint.json)
 - [x] Stylelint (stylelint.json)
@@ -92,7 +93,7 @@ If the package has alias, you should configure the alias in `config.json` file (
 
 ## Quickly Lint
 
-You can quickly lint your project by running the following command:
+You can quickly lint your project by running the following command: **(Make sure you have installed the linter by `wlint`)**
 
 ```bash
 wlint lint
@@ -105,8 +106,6 @@ wlint lint fix
 ```
 
 > But make sure you have installed the linter by `wlint`, you have better don't install the linter by yourself. It maybe cause some problems.
-
-If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
 
 ## Automatic Update Linters
 
@@ -280,7 +279,7 @@ You should create a `config.json` file in the root directory of your project, an
 
 Now wlint supports the following configuration items:
 
-- **aliases**: [package alias](#custom-linting-config-support)
+- **aliases**: [package alias](#packages-alias)
 - **categories**: [custom category matching names](#automatic-matching-category)
 
 ## License
