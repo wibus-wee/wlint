@@ -45,7 +45,7 @@ export function getNpmPackageFiles(name: string, version: string) {
  * Get the file details
  */
 export function getNpmPackageFile(name: string, fileId: string) {
-	return get<string>(`https://www.npmjs.com/package/${name}/file/${fileId}`);
+	return get<object>(`https://www.npmjs.com/package/${name}/file/${fileId}`);
 }
 
 export function getGitHubFiles(repo: string, dir?: string) {
@@ -58,7 +58,7 @@ export function getGitHubFiles(repo: string, dir?: string) {
 export async function getGitHubFile(
 	repo: string,
 	file: string
-): Promise<string> {
+): Promise<object> {
 	const metaURL =
 		"https://api.github.com" + `/repos/${repo}/contents/${file}`;
 	const meta = await get<{ download_url: string }>(metaURL);
