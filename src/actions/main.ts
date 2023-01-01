@@ -158,7 +158,7 @@ export const main = async (argv: Iminimist) => {
 	}
 
 	let category: string | undefined =
-		autoMatcher(wlintConfig?.categories) || argv.category;
+		autoMatcher(wlintConfig?.categories) || argv.c || argv.category;
 
 	if (category && !categories.includes(category)) {
 		console.log(
