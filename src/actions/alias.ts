@@ -4,7 +4,7 @@ import prompts from "prompts";
 import { Iminimist } from "../types";
 import { configFile, getShell, getUserHome, validateType } from "../utils";
 import { CONFIG } from "../constants";
-import { boom, promptsOnCancel } from "src/error";
+import { boom, promptsOnCancel } from "../error";
 
 function consoleSource(filename: string) {
 	console.log(`\nYou should restart your terminal to apply the changes`);

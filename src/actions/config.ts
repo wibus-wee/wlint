@@ -1,5 +1,5 @@
 import { cyan, green, yellow } from "kolorist";
-import { boom } from "src/error";
+import { boom } from "../error";
 import { Iminimist } from "../types";
 import { configFile, validateConfigType, setConfig } from "../utils";
 

@@ -4,7 +4,7 @@ import prompts from "prompts";
 import { Iminimist } from "../types";
 import { configFile, validateType } from "../utils";
 import { CONFIG } from "../constants";
-import { boom, promptsOnCancel } from "src/error";
+import { boom, promptsOnCancel } from "../error";
 
 function setConfig(
 	type: string,

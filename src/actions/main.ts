@@ -20,7 +20,7 @@ import {
 	getNpmPackageInfo,
 } from "../request";
 import spawn from "cross-spawn";
-import { boom, promptsOnCancel } from "src/error";
+import { boom, promptsOnCancel } from "../error";
 
 export const main = async (argv: Iminimist) => {
 	checkConflict();
