@@ -14,7 +14,7 @@
 - ⛏️ [Linter Configs Support](#linter-configs-support)
 - 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
 - 🤖️ [Quickly Lint](#quickly-lint)
-- 🔧 [Auto Update Linter Config](#auto-update-linter-config)
+- 🔧 [Automatic Update Linters](#automatic-update-linters)
 - 🍰 [Linter Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linter Configs Origin](#custom-linter-configs-origin)
@@ -104,13 +104,15 @@ wlint lint
 
 If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
 
-## Auto Update Linter Config
+## Automatic Update Linters
 
 After init linters with `wlint`, you can use the following command to update the linters config:
 
 ```bash
 wlint update
 ```
+
+Then wlint will automatically update the linters config and install the latest linters config package.
 
 This feature is provided by `.wlintrc` file, if you want to learn more about `.wlintrc` file, please see the [Repository Config Support](#repository-config-support) section.
 
@@ -242,9 +244,19 @@ wlint config remove autoMatch
 
 `wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file. 
 
-But in common, you have no need to configure the `.wlintrc` file, because `wlint` will automatically configure the `.wlintrc` file according to the project.
+But in common, you have no need to **(have better not)** configure the .wlintrc file, because wlint will automatically configure the .wlintrc file according to the project.
 
-When you use `wlint` command, wlint will automatically init the linters, and record the config origin and some other information in the `.wlintrc` file.
+When you init linter with lint, wlint will automatically record the config origin and some other information in the `.wlintrc` file. 
+
+```json5
+{
+  "origin": "wibus-wee/wlint-config-origin",
+  "category": "nextjs",
+  // ...more config
+}
+```
+
+For example, you can use `wlint update` command to update the linters. Learn more about the command, please see the [Automatic Update Linters](#automatic-update-linters) section.
 
 ## Origin Config Support
 
