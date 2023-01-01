@@ -6,6 +6,7 @@ import { Iminimist } from "./types";
 import { config } from "./actions/config";
 import { validateWlintRc } from "./utils";
 import { lint } from "./actions/lint";
+import { update } from "./actions/update";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
 
@@ -27,6 +28,9 @@ async function init() {
 				break;
 			case "lint":
 				await lint(argv);
+				break;
+			case "update":
+				await update();
 				break;
 			default:
 				await main(argv);
