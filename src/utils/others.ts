@@ -21,3 +21,15 @@ export function getShell(): string {
 	}
 	return shell.split("/").pop()!;
 }
+
+export function parseConfigKeys(keys: string[]) {
+	const configKeys = keys.map((key) => {
+		const [k, t] = key.split(":");
+		return {
+			key: k.replace("?", ""),
+			type: t,
+			optional: k.includes("?"),
+		};
+	});
+	return configKeys;
+}

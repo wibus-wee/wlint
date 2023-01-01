@@ -1,6 +1,5 @@
 import fs from "node:fs";
-import { CONFIG, SUPPORT_CONFIG_KEYS } from "../constants";
-import { transformValue } from "./others";
+import { CONFIG } from "../constants";
 
 export const __DEV__ = process.env.NODE_ENV === "development";
 
@@ -25,31 +24,3 @@ export function setConfig(key: string, value: string) {
 }
 
 export const userConfig = JSON.parse(getConfigFile());
-
-export function getConfigKeys() {
-	const keys = SUPPORT_CONFIG_KEYS;
-	const configKeys = keys.map((key) => {
-		const [k, t] = key.split(":");
-		return {
-			key: k.replace("?", ""),
-			type: t,
-			optional: k.includes("?"),
-		};
-	});
-	return configKeys;
-}
-
-export function isKeySupported(key: string) {
-	const keys = getConfigKeys();
-	return keys.some((k) => k.key === key);
-}
-
-export function isKeyValid(key: string, value: any) {
-	const keys = getConfigKeys();
-	const k = keys.find((k) => k.key === key);
-	if (!k) return false; // if key is not exist in SUPPORT_CONFIG_KEYS
-	const type = k.type;
-	if (k.optional && !value) return true;
-	if (typeof transformValue(value) !== type) return false;
-	return true;
-}
