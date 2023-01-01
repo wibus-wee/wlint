@@ -1,7 +1,7 @@
 import { cyan, green, yellow } from "kolorist";
 import { boom } from "../error";
 import { Iminimist } from "../types";
-import { configFile, validateConfigType, setConfig } from "../utils";
+import { userConfig, validateConfigType, setConfig } from "../utils";
 
 export async function config(argv: Iminimist) {
 	validateConfigType(argv._);
@@ -9,7 +9,7 @@ export async function config(argv: Iminimist) {
 	const action = argv._[1];
 	const key = argv._[2];
 	const value = argv._[3];
-	const config = configFile;
+	const config = userConfig;
 
 	switch (action) {
 		case "set":

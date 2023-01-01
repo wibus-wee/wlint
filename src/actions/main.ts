@@ -5,12 +5,12 @@ import { ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
 	autoMatcher,
-	checkConflict,
-	configFile,
 	detectPkgManage,
 	generateLinterRcFile,
 	isNpmPackage,
 	parseNpmPackages,
+	userConfig,
+	validateConfigConflict,
 } from "../utils";
 import {
 	getGitHubFile,
@@ -23,9 +23,9 @@ import spawn from "cross-spawn";
 import { boom, promptsOnCancel } from "../error";
 
 export const main = async (argv: Iminimist) => {
-	checkConflict();
+	validateConfigConflict();
 
-	const config = configFile;
+	const config = userConfig;
 	let packageManager = detectPkgManage();
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
 	const configOriginals = config.originals?.length
