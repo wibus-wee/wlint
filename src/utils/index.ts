@@ -1,5 +1,5 @@
 export * from "./config";
-export * from "./generater";
+export * from "./generator";
 export * from "./matcher";
 export * from "./others";
 export * from "./packages";
