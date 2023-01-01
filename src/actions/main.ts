@@ -173,13 +173,13 @@ export const main = async (argv: Iminimist) => {
 	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
 	let repoConfig: any;
 	if (fileList.includes("config.json")) {
-		const id = cache!.files[`config.json`].hex;
 		if (isNpm) {
+			const id = cache!.files[`config.json`].hex;
 			repoConfig = await getNpmPackageFile(original, id);
 		} else {
 			repoConfig = await getGitHubFile(original, `config.json`);
 		}
-		repoConfig = JSON.parse(repoConfig);
+		repoConfig = repoConfig ? JSON.parse(JSON.stringify(repoConfig)) : {};
 	}
 
 	let category: string | undefined =
@@ -268,7 +268,7 @@ export const main = async (argv: Iminimist) => {
 				);
 				data = await getGitHubFile(original, path);
 			}
-			generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
+			generateLinterRcFile(linter, JSON.stringify(data));
 			console.log(
 				`${green("✔")} .${linter.replace(".json", "")}rc generated`
 			);

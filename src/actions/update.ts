@@ -121,13 +121,13 @@ export async function update() {
 	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
 	let repoConfig: any;
 	if (fileList.includes("config.json")) {
-		const id = cache!.files[`config.json`].hex;
 		if (isNpm) {
+			const id = cache!.files[`config.json`].hex;
 			repoConfig = await getNpmPackageFile(origin, id);
 		} else {
 			repoConfig = await getGitHubFile(origin, `config.json`);
 		}
-		repoConfig = JSON.parse(repoConfig);
+		repoConfig = JSON.parse(JSON.stringify(repoConfig));
 	}
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
@@ -150,7 +150,7 @@ export async function update() {
 				);
 				data = await getGitHubFile(origin, path);
 			}
-			generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
+			generateLinterRcFile(linter, JSON.stringify(data));
 			console.log(
 				`${green("✔")} .${linter.replace(".json", "")}rc generated`
 			);

@@ -1,7 +1,7 @@
 import { userHome } from "./utils/user";
 export const WLINT = `${userHome}/.config`;
 export const CONFIG = `${WLINT}/.wlintrc.json`;
-export const ORIGINAL = `wibusbot/wlint-config`;
+export const ORIGINAL = `wibus-wee/wlint-config`;
 
 export const SUPPORT_LINTER = [
 	"eslint.json",
