@@ -14,12 +14,14 @@
 - ⛏️ [Linter Configs Support](#linter-configs-support)
 - 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
 - 🤖️ [Quickly Lint](#quickly-lint)
+- 🔧 [Auto Update Linter Config](#auto-update-linter-config)
 - 🍰 [Linter Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linter Configs Origin](#custom-linter-configs-origin)
 - 🎁 [Custom Command Alias Support](#custom-command-alias-support)
 - 🎨 [User Config Support](#user-config-support)
 - 📦 [Repository Config Support](#repository-config-support)
+- 📝 [Origin Config Support](#origin-config-support)
 
 ## Install
 
@@ -79,7 +81,7 @@ Save the above configuration in the `config.json` file in the **root directory**
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
 
-If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
+If you want to learn more about the `config.json` file, please see the [Origin Config Support](#origin-config-support) section.
 
 ## Linter Packages Auto Install
 
@@ -101,6 +103,16 @@ wlint lint
 > But make sure you have installed the linter by `wlint`, you have better don't install the linter by yourself. It maybe cause some problems.
 
 If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
+
+## Auto Update Linter Config
+
+After init linters with `wlint`, you can use the following command to update the linters config:
+
+```bash
+wlint update
+```
+
+This feature is provided by `.wlintrc` file, if you want to learn more about `.wlintrc` file, please see the [Repository Config Support](#repository-config-support) section.
 
 ## Custom Linter Configs Origin
 
@@ -184,7 +196,7 @@ You can configure the automatic matching category in the `config.json` file in t
 
 In default, wlint will match the `nextjs` category if the project has `next` package. But in the above example, wlint will match the `react` category if the project has `next` package.
 
-If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
+If you want to learn more about the `config.json` file, please see the [Origin Config Support](#origin-config-support) section.
 
 ## Custom Command Alias Support
 
@@ -228,9 +240,17 @@ wlint config remove autoMatch
 
 ## Repository Config Support
 
-`wlint` have a repository config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the repository config file.
+`wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file. 
 
-You should create a `config.json` file in the root directory of your project, and then you can configure the repository config in the `config.json` file. For example:
+But in common, you have no need to configure the `.wlintrc` file, because `wlint` will automatically configure the `.wlintrc` file according to the project.
+
+When you use `wlint` command, wlint will automatically init the linters, and record the config origin and some other information in the `.wlintrc` file.
+
+## Origin Config Support
+
+`wlint` have a origin config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the origin config file.
+
+You should create a `config.json` file in the root directory of your project, and then you can configure the origin config in the `config.json` file. For example:
 
 ```json5
 {
