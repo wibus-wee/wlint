@@ -1,39 +1,30 @@
 import fs from "node:fs";
-import { InpmPackages } from "../types";
 
-export function generatePrettierrcFile(json: string, npmPkgs?: InpmPackages) {
-	const pkgs = npmPkgs?.packages;
+export function generatePrettierrcFile(json: string) {
 	const jsons = JSON.parse(json);
+	const extend = jsons.extends;
+	delete jsons.extends;
 	const keys = Object.keys(jsons);
 	const prettierrc = `
 module.exports = {
+	${
+		extend?.map((pkg) => {
+			return `...require("${pkg}"),`;
+		}) || ""
+	}
 	${keys.map((key, index) => {
 		return `${key}: ${JSON.stringify(jsons[key])}${
 			index === keys.length - 1 ? "" : ","
 		}`;
 	})}
-	${
-		pkgs?.map((pkg) => {
-			return `...require("${pkg}"),`;
-		}) || ""
-	}
 };
 `;
-	const prettierrcStr = prettierrc.replace(/(\r)?\n/g, "");
-	fs.writeFileSync("./.prettierrc.js", prettierrcStr);
+	fs.writeFileSync("./.prettierrc.js", prettierrc.replace(/^\n/, ""));
 }
 
-export function generateLinterRcFile(
-	linter: string,
-	json: string,
-	pkgs: InpmPackages[]
-) {
+export function generateLinterRcFile(linter: string, json: string) {
 	if (linter === "prettier.json") {
-		generatePrettierrcFile(
-			json,
-			// @ts-ignore : the length is always 1 after filter
-			pkgs.filter((pkg) => pkg.linter === "prettier.json")
-		);
+		generatePrettierrcFile(json);
 		return;
 	}
 	fs.writeFileSync(`./.${linter.replace(".json", "")}rc.json`, json, {
