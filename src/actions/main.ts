@@ -5,12 +5,14 @@ import { ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
 	autoMatcher,
-	checkConflict,
-	configFile,
 	detectPkgManage,
 	generateLinterRcFile,
 	isNpmPackage,
 	parseNpmPackages,
+	userConfig,
+	validateConfigConflict,
+	setWlintConfig,
+	__DEV__,
 } from "../utils";
 import {
 	getGitHubFile,
@@ -23,16 +25,42 @@ import spawn from "cross-spawn";
 import { boom, promptsOnCancel } from "../error";
 
 export const main = async (argv: Iminimist) => {
-	checkConflict();
+	validateConfigConflict();
 
-	const config = configFile;
+	const config = userConfig;
 	let packageManager = detectPkgManage();
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
 	const configOriginals = config.originals?.length
 		? config.originals
 		: argv.original
 		? [argv.original]
-		: [ORIGINAL];
+		: [];
+
+	if (configOriginals.length === 0) {
+		const res = await prompts(
+			[
+				{
+					type: "confirm",
+					name: "useDefault",
+					message: `${blue(
+						"✖"
+					)} Can't detect origin. Do you want to use the default one? (${green(
+						`${ORIGINAL}`
+					)})`,
+					initial: true,
+				},
+			],
+			{
+				onCancel: promptsOnCancel,
+			}
+		);
+		if (res.useDefault) {
+			configOriginals.push(ORIGINAL);
+		}
+		if (!res.useDefault) {
+			boom(`Can't detect original, please specify one.`);
+		}
+	}
 
 	if (!fs.existsSync("package.json")) {
 		boom(`package.json not found, are you in the project root directory?`);
@@ -77,7 +105,9 @@ export const main = async (argv: Iminimist) => {
 		}
 	);
 
-	const original = res.original || configOriginals[0];
+	const original =
+		configOriginals.length > 1 ? res.original : configOriginals[0];
+	console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
 	const isNpm = isNpmPackage(original);
 	const categories: Array<string> = [];
 	let fileList: Array<string> = [];
@@ -136,19 +166,19 @@ export const main = async (argv: Iminimist) => {
 	);
 
 	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-	let wlintConfig: any;
+	let repoConfig: any;
 	if (fileList.includes("config.json")) {
 		const id = cache!.files[`config.json`].hex;
 		if (isNpm) {
-			wlintConfig = await getNpmPackageFile(original, id);
+			repoConfig = await getNpmPackageFile(original, id);
 		} else {
-			wlintConfig = await getGitHubFile(original, `config.json`);
+			repoConfig = await getGitHubFile(original, `config.json`);
 		}
-		wlintConfig = JSON.parse(wlintConfig);
+		repoConfig = JSON.parse(repoConfig);
 	}
 
 	let category: string | undefined =
-		autoMatcher(wlintConfig?.categories) || argv.c || argv.category;
+		autoMatcher(repoConfig?.categories) || argv.c || argv.category;
 
 	if (category && !categories.includes(category)) {
 		console.log(
@@ -207,13 +237,13 @@ export const main = async (argv: Iminimist) => {
 
 	console.log(`${blue("ℹ")} Configuring linter...`);
 
-	let data = "";
+	let data: object = {};
 
 	for (const linter of SUPPORT_LINTER) {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
-				const aliases = wlintConfig?.aliases || {};
+				const aliases = repoConfig?.aliases || {};
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
@@ -227,13 +257,24 @@ export const main = async (argv: Iminimist) => {
 						""
 					)}rc...`
 				);
-				generateLinterRcFile(linter, data, npmPackages);
+				generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(linter, data, aliases),
+					packages: parseNpmPackages(
+						linter,
+						JSON.stringify(data),
+						aliases
+					),
 				});
-				console.log(`${green("✔")} .${linter}rc generated`);
-				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
+				console.log(
+					`${green("✔")} .${linter.replace(".json", "")}rc generated`
+				);
+				console.log(
+					`${green("✔")} ${linter.replace(
+						".json",
+						""
+					)} npm packages recorded`
+				);
 			}
 		}
 	}
@@ -249,17 +290,23 @@ export const main = async (argv: Iminimist) => {
 	console.log(
 		`${blue("ℹ")} ${packageManager} add -D ${npmPackages
 			.map((item) => item.packages.join(" "))
-			.join("")}`
+			.join(" ")}`
 	);
-	spawn.sync(
-		packageManager,
-		[
-			"add",
-			"-D",
-			npmPackages.map((item) => item.packages.join(" ")).join(""),
-		],
-		{ stdio: "inherit" }
-	);
+	!__DEV__ &&
+		spawn.sync(
+			packageManager,
+			[
+				"add",
+				"-D",
+				npmPackages.map((item) => item.packages.join(" ")).join(" "),
+			],
+			{ stdio: "inherit" }
+		);
 
 	console.log(`${green("✔")} Linter dependencies installed`);
+
+	console.log(`${blue("ℹ")} Generating .wlintrc...`);
+	setWlintConfig("origin", original);
+	setWlintConfig("category", selectCategory);
+	console.log(`${green("✔")} .wlintrc auto generated`);
 };

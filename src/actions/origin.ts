@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { configFile, validateType } from "../utils";
+import { userConfig, validateType } from "../utils";
 import { CONFIG } from "../constants";
 import { boom, promptsOnCancel } from "../error";
 
@@ -71,7 +71,7 @@ export const origin = async (argv: Iminimist) => {
 	);
 
 	const original = argv._[2] || res.original;
-	const originalConfig = configFile;
+	const originalConfig = userConfig;
 
 	setConfig(argv._[1], originalConfig, original);
 };

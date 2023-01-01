@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, cyan, green } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { configFile, getShell, getUserHome, validateType } from "../utils";
+import { userConfig, getShell, userHome, validateType } from "../utils";
 import { CONFIG } from "../constants";
 import { boom, promptsOnCancel } from "../error";
 
@@ -18,7 +18,7 @@ export const alias = async (argv: Iminimist) => {
 		if (argv._[1] === "remove") return "uninstall";
 		return "install";
 	})();
-	if (configFile.alias.length === 0 && type === "uninstall") {
+	if (userConfig.alias.length === 0 && type === "uninstall") {
 		boom("No alias installed");
 	}
 	const res = await prompts(
@@ -40,7 +40,7 @@ export const alias = async (argv: Iminimist) => {
 				name: "alias",
 				message: `Select the alias you want to uninstall`,
 				choices: [
-					...configFile.alias.map((alias: string) => ({
+					...userConfig.alias.map((alias: string) => ({
 						title: alias,
 						value: alias,
 					})),
@@ -59,7 +59,7 @@ export const alias = async (argv: Iminimist) => {
 	);
 
 	const alias = argv.alias?.split(",") || res.alias || undefined;
-	const shellrc = `${getUserHome()}/${res.shellrc}`;
+	const shellrc = `${userHome}/${res.shellrc}`;
 
 	switch (type) {
 		case "install":
@@ -83,8 +83,8 @@ export const alias = async (argv: Iminimist) => {
 				console.log(`Configuring wlint config file...`);
 
 				const config = {
-					...configFile,
-					alias: [...configFile.alias, alias],
+					...userConfig,
+					alias: [...userConfig.alias, alias],
 				};
 				console.log(
 					`${blue("ℹ [wlint]")} Injecting wlint config file...`
@@ -97,13 +97,13 @@ export const alias = async (argv: Iminimist) => {
 		case "uninstall":
 			if (res.confirm) {
 				let file = fs.readFileSync(shellrc, "utf8").toString();
-				const configAlias = configFile.alias as string[];
+				const configAlias = userConfig.alias as string[];
 				configAlias.map((alias) => {
 					file = file.replace(`alias ${alias}="wlint"`, "");
 				});
 				fs.writeFileSync(shellrc, file);
 				const config = {
-					...configFile,
+					...userConfig,
 					alias: configAlias.filter((a) => !res.alias.includes(a)),
 				};
 				console.log(

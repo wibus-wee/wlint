@@ -4,11 +4,12 @@ import { origin } from "./actions/origin";
 import { main } from "./actions/main";
 import { Iminimist } from "./types";
 import { config } from "./actions/config";
-import { lint } from "./actions/lint";
+import { validateWlintRc } from "./utils";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
 
 async function init() {
+	validateWlintRc();
 	try {
 		switch (argv._[0]) {
 			case "alias":
