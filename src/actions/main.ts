@@ -32,7 +32,33 @@ export const main = async (argv: Iminimist) => {
 		? config.originals
 		: argv.original
 		? [argv.original]
-		: [ORIGINAL];
+		: [];
+
+	if (configOriginals.length === 0) {
+		const res = await prompts(
+			[
+				{
+					type: "confirm",
+					name: "useDefault",
+					message: `${blue(
+						"✖"
+					)} Can't detect origin. Do you want to use the default one? (${green(
+						`${ORIGINAL}`
+					)})`,
+					initial: true,
+				},
+			],
+			{
+				onCancel: promptsOnCancel,
+			}
+		);
+		if (res.useDefault) {
+			configOriginals.push(ORIGINAL);
+		}
+		if (!res.useDefault) {
+			boom(`Can't detect original, please specify one.`);
+		}
+	}
 
 	if (!fs.existsSync("package.json")) {
 		boom(`package.json not found, are you in the project root directory?`);
@@ -77,7 +103,9 @@ export const main = async (argv: Iminimist) => {
 		}
 	);
 
-	const original = res.original || configOriginals[0];
+	const original =
+		configOriginals.length > 1 ? res.original : configOriginals[0];
+	console.log(`Using ${green(original)} as original.`);
 	const isNpm = isNpmPackage(original);
 	const categories: Array<string> = [];
 	let fileList: Array<string> = [];

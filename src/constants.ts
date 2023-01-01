@@ -1,6 +1,5 @@
-import { getUserHome } from "./utils";
-
-export const WLINT = `${getUserHome()}/.config`;
+import { userHome } from "./utils/user";
+export const WLINT = `${userHome}/.config`;
 export const CONFIG = `${WLINT}/.wlintrc.json`;
 export const ORIGINAL = `wibusbot/wlint-config`;
 

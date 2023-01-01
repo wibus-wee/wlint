@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, cyan, green } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { userConfig, getShell, getUserHome, validateType } from "../utils";
+import { userConfig, getShell, userHome, validateType } from "../utils";
 import { CONFIG } from "../constants";
 import { boom, promptsOnCancel } from "../error";
 
@@ -59,7 +59,7 @@ export const alias = async (argv: Iminimist) => {
 	);
 
 	const alias = argv.alias?.split(",") || res.alias || undefined;
-	const shellrc = `${getUserHome()}/${res.shellrc}`;
+	const shellrc = `${userHome}/${res.shellrc}`;
 
 	switch (type) {
 		case "install":
