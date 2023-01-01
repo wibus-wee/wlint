@@ -308,3 +308,25 @@ export function autoMatcher(autoMatchConfig?: {
 	}
 	return matchers.join("");
 }
+
+/**
+ * Means `clsx` for args list.
+ */
+export const argsx = (...args: Array<any>) => {
+	const result: string[] = [];
+	args.forEach((arg) => {
+		if (typeof arg === "string") {
+			result.push(arg);
+		} else if (Array.isArray(arg)) {
+			result.push(...argsx(arg));
+		} else {
+			for (const key in arg) {
+				const value = arg[key];
+				if (value) {
+					result.push(key);
+				}
+			}
+		}
+	});
+	return result;
+};

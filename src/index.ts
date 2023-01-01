@@ -4,6 +4,7 @@ import { origin } from "./actions/origin";
 import { main } from "./actions/main";
 import { Iminimist } from "./types";
 import { config } from "./actions/config";
+import { lint } from "./actions/lint";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
 
@@ -22,8 +23,11 @@ async function init() {
 			case "config":
 				await config(argv);
 				break;
+			case "lint":
+				await lint(argv);
+				break;
 			default:
-				main(argv);
+				await main(argv);
 				break;
 		}
 	} catch (e) {
