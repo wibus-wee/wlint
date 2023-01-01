@@ -13,13 +13,16 @@
 
 - ⛏️ [Linter Configs Support](#linter-configs-support)
 - 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
-- 🤖️ [Quickly linting](#quickly-linting)
+- 🌮 [Packages Alias](#packages-alias)
+- 🤖️ [Quickly Lint](#quickly-lint)
+- 🔧 [Automatic Update Linters](#automatic-update-linters)
 - 🍰 [Linter Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linter Configs Origin](#custom-linter-configs-origin)
 - 🎁 [Custom Command Alias Support](#custom-command-alias-support)
 - 🎨 [User Config Support](#user-config-support)
 - 📦 [Repository Config Support](#repository-config-support)
+- 📝 [Origin Config Support](#origin-config-support)
 
 ## Install
 
@@ -30,16 +33,16 @@ npm i -g wlint
 ## Usage
 
 ```bash
-wlint # Quickly start linting
+wlint # Quickly config your project linters.
 wlint -c <category> # Use the config in the category
 ```
 
-## Linters Config Support
+## Linter Configs Support
 
 - [x] ESLint (eslint.json)
 - [x] Stylelint (stylelint.json)
 - [x] Prettier (prettier.json)
-- [ ] Commitlint (commitlint.json)
+- [x] Commitlint (commitlint.json)
 
 ### Special Linting Config
 
@@ -79,7 +82,7 @@ Save the above configuration in the `config.json` file in the **root directory**
 
 Above is the example of `eslint-config-xxx`, and the `eslint-config-xxx` package is actually `@xxx/eslint-config-xxx` in npm. And actually wlint will install `@xxx/eslint-config-xxx` package.
 
-If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
+If you want to learn more about the `config.json` file, please see the [Origin Config Support](#origin-config-support) section.
 
 ## Linter Packages Auto Install
 
@@ -88,19 +91,33 @@ wlint will automatically install the linter config package according to the lint
 If the package has alias, you should configure the alias in `config.json` file (see [Packages Alias](#packages-alias) section).
 
 
-## Quickly linting
+## Quickly Lint
 
-You can quickly lint your project by running the following command:
+You can quickly lint your project by running the following command: **(Make sure you have installed the linter by `wlint`)**
 
 ```bash
 wlint lint
 ```
 
-`wlint` will automatically lint your project according to linter config.
+`wlint` will automatically lint your project according to linter config. If you want to fix the linting errors, you can run the following command:
+
+```bash
+wlint lint fix
+```
 
 > But make sure you have installed the linter by `wlint`, you have better don't install the linter by yourself. It maybe cause some problems.
 
-If your projects have not been initialized, `wlint` will automatically initialize your project linting config.
+## Automatic Update Linters
+
+After init linters with `wlint`, you can use the following command to update the linters config:
+
+```bash
+wlint update
+```
+
+Then wlint will automatically update the linters config and install the latest linters config package.
+
+This feature is provided by `.wlintrc` file, if you want to learn more about `.wlintrc` file, please see the [Repository Config Support](#repository-config-support) section.
 
 ## Custom Linter Configs Origin
 
@@ -108,19 +125,19 @@ You can create your own config origin, and you can also use the config origin th
 
 ### Create Your Own Config Origin
 
-1. Create a new repository on GitHub, and create a linter config file in the root directory of the repository, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linting Config Support](#linting-config-support) section.
+1. Create a new repository on GitHub, and create a linter config file in the root directory of the repository, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linters Config Support](#linters-config-support) section.
 2. Go to your shell and run the following command:
 
 ```bash
 wlint origin add <your config origin repository name>
-# wlint origin add wibus-wee/wlint-config-origin
+# wlint origin add wibus-wee/wlint-config
 # or you can use npm package name (if you have published your config to npm)
-# wlint origin add @wibus-wee/wlint-config-origin
+# wlint origin add @wibus-wee/wlint-config
 
 # If you want to remove the config origin, you can run the following command:
 wlint origin remove <your config origin repository name>
-# wlint origin remove wibus-wee/wlint-config-origin
-# wlint origin remove @wibus-wee/wlint-config-origin
+# wlint origin remove wibus-wee/wlint-config
+# wlint origin remove @wibus-wee/wlint-config
 ```
 3. Then you can use your config origin in your project!
 
@@ -184,7 +201,7 @@ You can configure the automatic matching category in the `config.json` file in t
 
 In default, wlint will match the `nextjs` category if the project has `next` package. But in the above example, wlint will match the `react` category if the project has `next` package.
 
-If you want to learn more about the `config.json` file, please see the [Repository Config Support](#repository-config-support) section.
+If you want to learn more about the `config.json` file, please see the [Origin Config Support](#origin-config-support) section.
 
 ## Custom Command Alias Support
 
@@ -228,16 +245,33 @@ wlint config remove autoMatch
 
 ## Repository Config Support
 
-`wlint` have a repository config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the repository config file.
+`wlint` have a repository config file called `.wlintrc`, you can configure the wlint some behaviors in the `.wlintrc` file. 
 
-You should create a `config.json` file in the root directory of your project, and then you can configure the repository config in the `config.json` file. For example:
+But in common, you have no need to **(have better not)** configure the .wlintrc file, because wlint will automatically configure the .wlintrc file according to the project. If you setup the `.wlintrc` file but add the wrong configuration, wlint will warn you when you use wlint.
+
+When you init linter with lint, wlint will automatically record the config origin and some other information in the `.wlintrc` file. 
 
 ```json5
 {
-  "aliases": { // package alias
+  "origin": "wibus-wee/wlint-config",
+  "category": "nextjs",
+}
+```
+
+For example, you can use `wlint update` command to update the linters. Learn more about the command, please see the [Automatic Update Linters](#automatic-update-linters) section.
+
+## Origin Config Support
+
+`wlint` have a origin config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the origin config file.
+
+You should create a `config.json` file in the root directory of your project, and then you can configure the origin config in the `config.json` file. For example:
+
+```json5
+{
+  "aliases": { // package aliases
     "prettier-config-akrc": "@akrc/prettier-config"
   },
-  "category": { // custom category matching name
+  "categories": { // custom category matching names
     "react": ["react", "react-dom", "next"]
   }
 }
@@ -245,8 +279,20 @@ You should create a `config.json` file in the root directory of your project, an
 
 Now wlint supports the following configuration items:
 
-- **aliases**: [package alias](#custom-linting-config-support)
-- **category**: [custom category matching name](#automatic-matching-category)
+- **aliases**: [package alias](#packages-alias)
+- **categories**: [custom category matching names](#automatic-matching-category)
+
+## Maintainers
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://iucky.cn"><img src="https://avatars.githubusercontent.com/u/62133302?v=4?s=100" width="100px;" alt="Wibus"/><br /><sub><b>Wibus</b></sub></a></td>
+      <td align="center"><a href="https://akr.moe"><img src="https://avatars.githubusercontent.com/u/85140972?v=4?s=100" width="100px;" alt="AkaraChen"/><br /><sub><b>AkaraChen</b></sub></a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ## License
 
