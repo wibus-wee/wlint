@@ -1,3 +1,2 @@
-export function getUserHome() {
-	return process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
-}
+import os from "node:os";
+export const userHome = os.homedir();
