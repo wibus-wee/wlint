@@ -82,6 +82,7 @@ export function validateConfigConflict() {
  */
 export function validateWlintRc() {
 	const file = wlintConfig;
+	if (!file) return;
 	Object.keys(file).forEach((key) => {
 		if (!isKeySupported(SUPPORT_WLINTRC_KEYS, key)) {
 			console.warn(
