@@ -5,6 +5,19 @@ import { AUTO_MATCH } from "../constants";
 import { boom } from "../error";
 import { userConfig } from "./config";
 
+function removeValueFromAutoMatch(value: string) {
+	for (const k in AUTO_MATCH) {
+		if (k in AUTO_MATCH) {
+			const val = AUTO_MATCH[k];
+			if (Array.isArray(val)) {
+				if (val.includes(value)) {
+					AUTO_MATCH[k] = val.filter((i: string) => i !== value);
+				}
+			}
+		}
+	}
+}
+
 export function autoMatcher(autoMatchConfig?: {
 	[key: string]: string[] | string;
 }) {
@@ -26,21 +39,6 @@ export function autoMatcher(autoMatchConfig?: {
 		);
 	}
 
-	const auto_match = AUTO_MATCH;
-
-	function removeValueFromAutoMatch(value: string) {
-		for (const k in auto_match) {
-			if (k in auto_match) {
-				const val = auto_match[k];
-				if (Array.isArray(val)) {
-					if (val.includes(value)) {
-						auto_match[k] = val.filter((i: string) => i !== value);
-					}
-				}
-			}
-		}
-	}
-
 	for (const key in autoMatchConfig) {
 		if (key in autoMatchConfig) {
 			const value = autoMatchConfig[key];
@@ -53,7 +51,7 @@ export function autoMatcher(autoMatchConfig?: {
 	}
 
 	// merge autoMatchConfig and AUTO_MATCH, if there are duplicate keys, use autoMatchConfig
-	const autoMatch = Object.assign({}, auto_match, autoMatchConfig);
+	const autoMatch = Object.assign({}, AUTO_MATCH, autoMatchConfig);
 	const autoMatchKeys = new Set(Object.keys(autoMatch));
 	const matchers: string[] = [];
 	for (const key of autoMatchKeys) {
