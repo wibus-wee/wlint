@@ -1,6 +1,6 @@
 import minimist from "minimist";
 import { alias } from "./actions/alias";
-import { origin } from "./actions/origin";
+import { origins } from "./actions/origins";
 import { main } from "./actions/main";
 import { Iminimist } from "./types";
 import { config } from "./actions/config";
@@ -15,8 +15,8 @@ async function init() {
 			case "alias":
 				await alias(argv);
 				break;
-			case "origin":
-				await origin(argv);
+			case "origins":
+				await origins(argv);
 				break;
 			case "install":
 				await main(argv);
