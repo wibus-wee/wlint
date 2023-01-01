@@ -161,7 +161,7 @@ export const main = async (argv: Iminimist) => {
 		}
 	}
 
-	categories = categories.filter((category) => category.includes("."));
+	categories = categories.filter((category) => !category.includes("."));
 	categories = categories.filter(
 		(category) => !IGNORE_DIRS.includes(category)
 	);
@@ -266,26 +266,26 @@ export const main = async (argv: Iminimist) => {
 						""
 					)}rc...`
 				);
-				generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
-				npmPackages.push({
-					linter,
-					packages: parseNpmPackages(
-						linter,
-						JSON.stringify(data),
-						aliases
-					),
-				});
-				console.log(
-					`${green("✔")} .${linter.replace(".json", "")}rc generated`
-				);
-				console.log(
-					`${green("✔")} ${linter.replace(
-						".json",
-						""
-					)} npm packages recorded`
-				);
 				data = await getGitHubFile(original, path);
 			}
+			generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
+			console.log(
+				`${green("✔")} .${linter.replace(".json", "")}rc generated`
+			);
+			npmPackages.push({
+				linter,
+				packages: parseNpmPackages(
+					linter,
+					JSON.stringify(data),
+					aliases
+				),
+			});
+			console.log(
+				`${green("✔")} ${linter.replace(
+					".json",
+					""
+				)} npm packages recorded`
+			);
 		}
 	}
 
@@ -318,5 +318,7 @@ export const main = async (argv: Iminimist) => {
 	console.log(`${blue("ℹ")} Generating .wlintrc...`);
 	setWlintConfig("origin", original);
 	setWlintConfig("category", selectCategory);
+	setWlintConfig("aliases", repoConfig?.aliases || {});
+	setWlintConfig("packages", npmPackages.map((item) => item.packages).flat());
 	console.log(`${green("✔")} .wlintrc auto generated`);
 };
