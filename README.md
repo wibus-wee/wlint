@@ -234,10 +234,10 @@ You should create a `config.json` file in the root directory of your project, an
 
 ```json5
 {
-  "aliases": { // package alias
+  "aliases": { // package aliases
     "prettier-config-akrc": "@akrc/prettier-config"
   },
-  "category": { // custom category matching name
+  "categories": { // custom category matching names
     "react": ["react", "react-dom", "next"]
   }
 }
@@ -246,7 +246,7 @@ You should create a `config.json` file in the root directory of your project, an
 Now wlint supports the following configuration items:
 
 - **aliases**: [package alias](#custom-linting-config-support)
-- **category**: [custom category matching name](#automatic-matching-category)
+- **categories**: [custom category matching names](#automatic-matching-category)
 
 ## License
 
