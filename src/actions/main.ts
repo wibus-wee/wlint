@@ -12,6 +12,7 @@ import {
 	userConfig,
 	validateConfigConflict,
 	setWlintConfig,
+	__DEV__,
 } from "../utils";
 import {
 	getGitHubFile,
@@ -236,7 +237,7 @@ export const main = async (argv: Iminimist) => {
 
 	console.log(`${blue("ℹ")} Configuring linter...`);
 
-	let data = "";
+	let data: object = {};
 
 	for (const linter of SUPPORT_LINTER) {
 		if (selectCategory) {
@@ -246,11 +247,9 @@ export const main = async (argv: Iminimist) => {
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
-					data = await getNpmPackageFile(original, fileId).then(
-						toString
-					);
+					data = await getNpmPackageFile(original, fileId);
 				} else {
-					data = await getGitHubFile(original, path).then(toString);
+					data = await getGitHubFile(original, path);
 				}
 				console.log(
 					`${blue("ℹ")} Generating .${linter.replace(
@@ -258,13 +257,24 @@ export const main = async (argv: Iminimist) => {
 						""
 					)}rc...`
 				);
-				generateLinterRcFile(linter, data, npmPackages);
+				generateLinterRcFile(linter, JSON.stringify(data), npmPackages);
 				npmPackages.push({
 					linter,
-					packages: parseNpmPackages(linter, data, aliases),
+					packages: parseNpmPackages(
+						linter,
+						JSON.stringify(data),
+						aliases
+					),
 				});
-				console.log(`${green("✔")} .${linter}rc generated`);
-				console.log(`${green("✔")} npmPackages recorded:`, npmPackages);
+				console.log(
+					`${green("✔")} .${linter.replace(".json", "")}rc generated`
+				);
+				console.log(
+					`${green("✔")} ${linter.replace(
+						".json",
+						""
+					)} npm packages recorded`
+				);
 			}
 		}
 	}
@@ -282,15 +292,16 @@ export const main = async (argv: Iminimist) => {
 			.map((item) => item.packages.join(" "))
 			.join(" ")}`
 	);
-	spawn.sync(
-		packageManager,
-		[
-			"add",
-			"-D",
-			npmPackages.map((item) => item.packages.join(" ")).join(" "),
-		],
-		{ stdio: "inherit" }
-	);
+	!__DEV__ &&
+		spawn.sync(
+			packageManager,
+			[
+				"add",
+				"-D",
+				npmPackages.map((item) => item.packages.join(" ")).join(" "),
+			],
+			{ stdio: "inherit" }
+		);
 
 	console.log(`${green("✔")} Linter dependencies installed`);
 
