@@ -8,41 +8,41 @@ import { boom, promptsOnCancel } from "../error";
 
 function setConfig(
 	type: string,
-	originalConfig: { originals: string[] },
-	original: string
+	originConfig: { origins: string[] },
+	origin: string
 ) {
 	switch (type) {
 		case "add":
-			if (originalConfig.originals?.includes(original)) {
-				boom(`The original repository already exists`);
+			if (originConfig.origins?.includes(origin)) {
+				boom(`The origin repository already exists`);
 			}
 			console.log(`${blue("ℹ [wlint]")} Injecting wlint config file...`);
 			fs.writeFileSync(
 				CONFIG,
 				JSON.stringify({
-					...originalConfig,
-					originals: [...(originalConfig.originals || []), original],
+					...originConfig,
+					origins: [...(originConfig.origins || []), origin],
 				}),
 				{ encoding: "utf-8" }
 			);
-			console.log(`${green("✔")} Original repository added`);
+			console.log(`${green("✔")} origin repository added`);
 			break;
 		case "remove":
-			if (!originalConfig.originals?.includes(original)) {
-				boom(`The original repository does not exist`);
+			if (!originConfig.origins?.includes(origin)) {
+				boom(`The origin repository does not exist`);
 			}
-			console.log(`${blue("ℹ [wlint]")} Removing original repository...`);
+			console.log(`${blue("ℹ [wlint]")} Removing origin repository...`);
 			fs.writeFileSync(
 				CONFIG,
 				JSON.stringify({
-					...originalConfig,
-					originals: originalConfig.originals.filter(
-						(_: string) => _ !== original
+					...originConfig,
+					origins: originConfig.origins.filter(
+						(_: string) => _ !== origin
 					),
 				}),
 				{ encoding: "utf-8" }
 			);
-			console.log(`${green("✔")} Original repository removed`);
+			console.log(`${green("✔")} origin repository removed`);
 			break;
 		default:
 			console.log(
@@ -50,18 +50,18 @@ function setConfig(
 					"ℹ [warning]"
 				)} You have not entered a type, defaulting to add`
 			);
-			setConfig("add", originalConfig, original);
+			setConfig("add", originConfig, origin);
 	}
 }
 
-export const origin = async (argv: Iminimist) => {
+export const origins = async (argv: Iminimist) => {
 	validateType(argv._);
 	const res = await prompts(
 		[
 			{
 				type: !argv._[2] ? "text" : null,
-				name: "original",
-				message: "Enter the original repository",
+				name: "origin",
+				message: "Enter the origin repository",
 				initial: "wibus-wee/wlint-config",
 			},
 		],
@@ -70,8 +70,8 @@ export const origin = async (argv: Iminimist) => {
 		}
 	);
 
-	const original = argv._[2] || res.original;
-	const originalConfig = userConfig;
+	const origin = argv._[2] || res.origin;
+	const originConfig = userConfig;
 
-	setConfig(argv._[1], originalConfig, original);
+	setConfig(argv._[1], originConfig, origin);
 };
