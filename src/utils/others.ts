@@ -33,3 +33,20 @@ export function parseConfigKeys(keys: string[]) {
 	});
 	return configKeys;
 }
+
+export function argsx(...args: any[]) {
+	const result: string[] = [];
+	args.forEach((arg) => {
+		if (typeof args === "string") {
+			result.push(arg);
+		} else if (Array.isArray(arg)) {
+			result.push(...argsx(arg));
+		} else {
+			for (const key in arg) {
+				const value = arg[key];
+				if (value) result.push(key);
+			}
+		}
+	});
+	return result;
+}
