@@ -85,5 +85,8 @@
     "patchedDependencies": {
       "hookable@5.4.2": "patches/hookable@5.4.2.patch"
     }
+  },
+  "dependencies": {
+    "got": "^12.5.3"
   }
 }

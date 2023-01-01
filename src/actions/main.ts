@@ -9,14 +9,16 @@ import {
 	configFile,
 	detectPkgManage,
 	generateLinterRcFile,
+	isNpmPackage,
+	parseNpmPackages,
+} from "../utils";
+import {
 	getGitHubFile,
 	getGitHubFiles,
 	getNpmPackageFile,
 	getNpmPackageFiles,
 	getNpmPackageInfo,
-	isNpmPackage,
-	parseNpmPackages,
-} from "../utils";
+} from "../request";
 import spawn from "cross-spawn";
 
 export const main = async (argv: Iminimist) => {
