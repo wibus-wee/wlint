@@ -1,10 +1,10 @@
 import { cyan, green, yellow } from "kolorist";
 import { boom } from "src/error";
 import { Iminimist } from "../types";
-import { configFile, isValidateConfigType, setConfig } from "../utils";
+import { configFile, validateConfigType, setConfig } from "../utils";
 
 export async function config(argv: Iminimist) {
-	isValidateConfigType(argv._);
+	validateConfigType(argv._);
 
 	const action = argv._[1];
 	const key = argv._[2];
