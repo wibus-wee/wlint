@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { blue, green, red, yellow } from "kolorist";
+import { blue, green, yellow } from "kolorist";
 import prompts from "prompts";
 import { ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
@@ -20,6 +20,7 @@ import {
 	getNpmPackageInfo,
 } from "../request";
 import spawn from "cross-spawn";
+import { boom, promptsOnCancel } from "../error";
 
 export const main = async (argv: Iminimist) => {
 	checkConflict();
@@ -34,12 +35,7 @@ export const main = async (argv: Iminimist) => {
 		: [ORIGINAL];
 
 	if (!fs.existsSync("package.json")) {
-		console.log(
-			`${red(
-				"✖"
-			)} package.json not found, are you in the project root directory?`
-		);
-		process.exit(1);
+		boom(`package.json not found, are you in the project root directory?`);
 	}
 
 	if (!packageManager) {
@@ -58,10 +54,7 @@ export const main = async (argv: Iminimist) => {
 				],
 			},
 			{
-				onCancel: () => {
-					console.log(`${red("✖")} Operation cancelled`);
-					process.exit(0);
-				},
+				onCancel: promptsOnCancel,
 			}
 		);
 		packageManager = res.packageManager;
@@ -80,10 +73,7 @@ export const main = async (argv: Iminimist) => {
 			},
 		],
 		{
-			onCancel: () => {
-				console.log(`${red("✖")} Operation cancelled`);
-				process.exit(0);
-			},
+			onCancel: promptsOnCancel,
 		}
 	);
 
@@ -95,7 +85,7 @@ export const main = async (argv: Iminimist) => {
 	if (isNpm) {
 		const latest = (await getNpmPackageInfo(original))["dist-tags"].latest;
 		if (!latest) {
-			throw new Error(`${red("✖")} Package not found`);
+			boom(`Can't get latest version of ${original}`);
 		}
 		const list = await getNpmPackageFiles(original, latest);
 		cache = list;
@@ -182,10 +172,7 @@ export const main = async (argv: Iminimist) => {
 			},
 		],
 		{
-			onCancel: () => {
-				console.log(`${red("✖")} Operation cancelled`);
-				process.exit(0);
-			},
+			onCancel: promptsOnCancel,
 		}
 	);
 
@@ -253,10 +240,12 @@ export const main = async (argv: Iminimist) => {
 
 	console.log(`${blue("ℹ")} Installing linter dependencies...`);
 
-	if (!packageManager)
-		throw new Error(
-			"packageManager is undefined, please create an issue in https://github.com/wibus-wee/wlint/issues"
+	if (!packageManager) {
+		boom(
+			`packageManager is undefined, please create an issue in https://github.com/wibus-wee/wlint/issues`
 		);
+		return;
+	}
 	console.log(
 		`${blue("ℹ")} ${packageManager} add -D ${npmPackages
 			.map((item) => item.packages.join(" "))

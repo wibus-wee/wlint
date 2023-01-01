@@ -1,9 +1,10 @@
-import { cyan, green, red, yellow } from "kolorist";
+import { cyan, green, yellow } from "kolorist";
+import { boom } from "../error";
 import { Iminimist } from "../types";
-import { configFile, isValidateConfigType, setConfig } from "../utils";
+import { configFile, validateConfigType, setConfig } from "../utils";
 
 export async function config(argv: Iminimist) {
-	isValidateConfigType(argv._);
+	validateConfigType(argv._);
 
 	const action = argv._[1];
 	const key = argv._[2];
@@ -13,10 +14,7 @@ export async function config(argv: Iminimist) {
 	switch (action) {
 		case "set":
 			if (config[key] && config[key].includes(value)) {
-				console.log(
-					`${red("✖")} ${cyan(value)} already exists in ${key}`
-				);
-				process.exit(1);
+				boom(`${cyan(value)} already exists in ${key}`);
 			}
 			config[key] ? config[key].push(value) : (config[key] = [value]);
 			setConfig(key, config[key]);
@@ -29,10 +27,7 @@ export async function config(argv: Iminimist) {
 			break;
 		case "remove":
 			if (value && !config[key].includes(value)) {
-				console.log(
-					`${red("✖")} ${cyan(value)} does not exist in ${key}`
-				);
-				process.exit(1);
+				boom(`${cyan(value)} does not exist in ${key}`);
 			}
 			if (!value) {
 				delete config[key];
@@ -50,7 +45,6 @@ export async function config(argv: Iminimist) {
 			console.log(config);
 			break;
 		default:
-			console.log(`${yellow("ℹ [warning]")} You have not entered a type`);
-			process.exit(1);
+			boom(`You have not entered a correct action: set|get|remove|list`);
 	}
 }

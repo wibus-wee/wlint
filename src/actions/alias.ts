@@ -1,9 +1,10 @@
 import fs from "node:fs";
-import { blue, cyan, green, red } from "kolorist";
+import { blue, cyan, green } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
 import { configFile, getShell, getUserHome, validateType } from "../utils";
 import { CONFIG } from "../constants";
+import { boom, promptsOnCancel } from "../error";
 
 function consoleSource(filename: string) {
 	console.log(`\nYou should restart your terminal to apply the changes`);
@@ -18,7 +19,7 @@ export const alias = async (argv: Iminimist) => {
 		return "install";
 	})();
 	if (configFile.alias.length === 0 && type === "uninstall") {
-		throw new Error(`${red("✖")} No alias found`);
+		boom("No alias installed");
 	}
 	const res = await prompts(
 		[
@@ -53,10 +54,7 @@ export const alias = async (argv: Iminimist) => {
 			},
 		],
 		{
-			onCancel: () => {
-				console.log(`${red("✖")} Operation cancelled`);
-				process.exit(0);
-			},
+			onCancel: promptsOnCancel,
 		}
 	);
 
@@ -72,11 +70,7 @@ export const alias = async (argv: Iminimist) => {
 						.toString()
 						.includes(`alias ${alias}="wlint"`)
 				) {
-					console.log(
-						`${red("✖")} Alias ${cyan(alias)} already exists`
-					);
-					consoleSource(shellrc);
-					process.exit(1);
+					boom(`Alias ${cyan(alias)} already exists`);
 				}
 				fs.appendFileSync(shellrc, `\nalias ${alias}="wlint"`);
 
