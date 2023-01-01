@@ -84,9 +84,8 @@ export function validateWlintRc() {
 	const file = wlintConfig;
 	Object.keys(file).forEach((key) => {
 		if (!isKeySupported(SUPPORT_WLINTRC_KEYS, key)) {
-			boom(
-				`Invalid key, supported keys: ${SUPPORT_CONFIG_KEYS.join(", ")}`
-			);
+			console.warn(`${yellow("⚠️")} Invalid key: ${key}`);
+			return; // if key is not exist in SUPPORT_WLINTRC_KEYS, should not validate value
 		}
 		if (!isKeyValid(SUPPORT_WLINTRC_KEYS, key, file[key])) {
 			boom(`Invalid value for key ${key}`);
