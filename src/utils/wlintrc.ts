@@ -9,6 +9,10 @@ export function getWlintConfig() {
 	}
 }
 
+export function hasWlintConfig() {
+	return fs.existsSync("./.wlintrc");
+}
+
 export const wlintConfig = getWlintConfig();
 
 export function setWlintConfig(key: string, value: any) {

@@ -5,6 +5,7 @@ import { main } from "./actions/main";
 import { Iminimist } from "./types";
 import { config } from "./actions/config";
 import { validateWlintRc } from "./utils";
+import { lint } from "./actions/lint";
 
 const argv = minimist<Iminimist>(process.argv.slice(2), { string: ["_"] });
 
