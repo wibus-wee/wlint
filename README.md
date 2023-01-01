@@ -126,7 +126,7 @@ You can create your own config origin, and you can also use the config origin th
 
 ### Create Your Own Config Origin
 
-1. Create a new repository on GitHub, and create a linter config file in the root directory of the repository, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linters Config Support](#linters-config-support) section.
+1. Create a new repository on GitHub, and create a linter config file in the `default` directory, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linters Config Support](#linters-config-support) section.
 2. Go to your shell and run the following command:
 
 ```bash
