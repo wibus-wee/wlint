@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { InpmPackages } from "../types";
 
-export function generatePreittierrcFile(json: string, npmPkgs?: InpmPackages) {
+export function generatePrettierrcFile(json: string, npmPkgs?: InpmPackages) {
 	const pkgs = npmPkgs?.packages;
 	const jsons = JSON.parse(json);
 	const prettierrc = `
@@ -26,7 +26,7 @@ export function generateLinterRcFile(
 	pkgs?: InpmPackages[]
 ) {
 	if (linter === "prettier.json") {
-		generatePreittierrcFile(
+		generatePrettierrcFile(
 			json,
 			// @ts-ignore
 			pkgs.filter((pkg) => pkg.linter === "prettier.json")
