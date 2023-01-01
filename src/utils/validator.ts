@@ -1,4 +1,4 @@
-import { yellow } from "kolorist";
+import { cyan, yellow } from "kolorist";
 import fs from "node:fs";
 import {
 	SUPPORT_CONFIG_KEYS,
@@ -84,11 +84,13 @@ export function validateWlintRc() {
 	const file = wlintConfig;
 	Object.keys(file).forEach((key) => {
 		if (!isKeySupported(SUPPORT_WLINTRC_KEYS, key)) {
-			console.warn(`${yellow("⚠️")} Invalid key: ${key}`);
+			console.warn(
+				`${yellow("⚠")} Found unsupported key in .wlintrc: ${cyan(key)}`
+			);
 			return; // if key is not exist in SUPPORT_WLINTRC_KEYS, should not validate value
 		}
 		if (!isKeyValid(SUPPORT_WLINTRC_KEYS, key, file[key])) {
-			boom(`Invalid value for key ${key}`);
+			boom(`Invalid value for key ${cyan(key)}: ${file[key]}`);
 		}
 	});
 }
