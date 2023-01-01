@@ -11,6 +11,7 @@ import {
 	parseNpmPackages,
 	userConfig,
 	validateConfigConflict,
+	setWlintConfig,
 } from "../utils";
 import {
 	getGitHubFile,
@@ -21,7 +22,6 @@ import {
 } from "../request";
 import spawn from "cross-spawn";
 import { boom, promptsOnCancel } from "../error";
-import { setWlintConfig } from "src/utils/wlintrc";
 
 export const main = async (argv: Iminimist) => {
 	validateConfigConflict();
@@ -165,19 +165,19 @@ export const main = async (argv: Iminimist) => {
 	);
 
 	console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-	let wlintConfig: any;
+	let repoConfig: any;
 	if (fileList.includes("config.json")) {
 		const id = cache!.files[`config.json`].hex;
 		if (isNpm) {
-			wlintConfig = await getNpmPackageFile(original, id);
+			repoConfig = await getNpmPackageFile(original, id);
 		} else {
-			wlintConfig = await getGitHubFile(original, `config.json`);
+			repoConfig = await getGitHubFile(original, `config.json`);
 		}
-		wlintConfig = JSON.parse(wlintConfig);
+		repoConfig = JSON.parse(repoConfig);
 	}
 
 	let category: string | undefined =
-		autoMatcher(wlintConfig?.categories) || argv.c || argv.category;
+		autoMatcher(repoConfig?.categories) || argv.c || argv.category;
 
 	if (category && !categories.includes(category)) {
 		console.log(
@@ -242,13 +242,15 @@ export const main = async (argv: Iminimist) => {
 		if (selectCategory) {
 			console.log(`${blue("ℹ")} Configuring ${linter}...`);
 			if (fileList.includes(`${linter}`)) {
-				const aliases = wlintConfig?.aliases || {};
+				const aliases = repoConfig?.aliases || {};
 				const path = `${selectCategory}/${linter}`;
 				if (isNpm) {
 					const fileId = cache!.files[path].hex;
-					data = await getNpmPackageFile(original, fileId);
+					data = await getNpmPackageFile(original, fileId).then(
+						toString
+					);
 				} else {
-					data = await getGitHubFile(original, path);
+					data = await getGitHubFile(original, path).then(toString);
 				}
 				console.log(
 					`${blue("ℹ")} Generating .${linter.replace(
@@ -278,7 +280,7 @@ export const main = async (argv: Iminimist) => {
 	console.log(
 		`${blue("ℹ")} ${packageManager} add -D ${npmPackages
 			.map((item) => item.packages.join(" "))
-			.join("")}`
+			.join(" ")}`
 	);
 	spawn.sync(
 		packageManager,
