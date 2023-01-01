@@ -16,13 +16,26 @@ export function isKeySupported(_keys: string[], key: string) {
 }
 
 export function isKeyValid(_keys: string[], key: string, value: any) {
+	let res = false;
 	const keys = parseConfigKeys(_keys);
 	const k = keys.find((k) => k.key === key);
 	if (!k) return false; // if key is not exist in SUPPORT_CONFIG_KEYS
-	const type = k.type;
 	if (k.optional && !value) return true;
-	if (typeof transformValue(value) !== type) return false;
-	return true;
+
+	if (k.type.split("|").length > 1) {
+		// if type is union
+		const types = k.type.split("|");
+		res = types.some((t) => typeof transformValue(value) === t); // check if value is type
+	} else if (k.type.split("[]").length > 1) {
+		// if type is array
+		if (!Array.isArray(value)) return false; // if value is not array
+		const type = k.type.split("[]")[0]; // get type of array
+		res = value.every((v) => typeof transformValue(v) === type); // check if every value is type
+	} else {
+		res = typeof transformValue(value) === k.type; // check if value is type
+	}
+
+	return res;
 }
 
 // only for origin and alias method

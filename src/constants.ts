@@ -9,7 +9,11 @@ export const SUPPORT_LINTER = [
 	"stylelint.json",
 	"commitlint.json",
 ];
-export const SUPPORT_CONFIG_KEYS = ["alias:string", "autoMatch?:boolean"];
+export const SUPPORT_CONFIG_KEYS = [
+	"alias:string",
+	"autoMatch?:boolean",
+	"origins?:string[]|string",
+];
 export const SUPPORT_WLINTRC_KEYS = ["origin:string", "category:string"];
 
 export const AUTO_MATCH = {
