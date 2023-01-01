@@ -29,7 +29,6 @@ export async function update() {
 	const config = getWlintConfig();
 	const origin: string = config.origin;
 	const category: string | undefined = config.category;
-	const aliases: object | undefined = config.aliases;
 	const isNpm = isNpmPackage(origin);
 	const packageManager = detectPkgManage();
 	let categories: Array<string> = [];
@@ -130,8 +129,6 @@ export async function update() {
 		}
 		repoConfig = JSON.parse(repoConfig);
 	}
-
-	const originalNpmPackages = new Array<InpmPackages>(); // 原始的包
 	const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
 	let data: object = {};

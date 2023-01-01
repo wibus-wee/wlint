@@ -318,7 +318,6 @@ export const main = async (argv: Iminimist) => {
 	console.log(`${blue("ℹ")} Generating .wlintrc...`);
 	setWlintConfig("origin", original);
 	setWlintConfig("category", selectCategory);
-	setWlintConfig("aliases", repoConfig?.aliases || {});
 	setWlintConfig("packages", npmPackages.map((item) => item.packages).flat());
 	console.log(`${green("✔")} .wlintrc auto generated`);
 };

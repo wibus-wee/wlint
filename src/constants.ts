@@ -17,7 +17,6 @@ export const SUPPORT_CONFIG_KEYS = [
 export const SUPPORT_WLINTRC_KEYS = [
 	"origin:string",
 	"category?:string",
-	"aliases?:object",
 	"packages?:string[]",
 ];
 
