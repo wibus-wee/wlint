@@ -1,9 +1,10 @@
 import fs from "node:fs";
-import { blue, green, red, yellow } from "kolorist";
+import { blue, green, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
 import { configFile, validateType } from "../utils";
 import { CONFIG } from "../constants";
+import { boom, promptsOnCancel } from "src/error";
 
 function setConfig(
 	type: string,
@@ -13,9 +14,7 @@ function setConfig(
 	switch (type) {
 		case "add":
 			if (originalConfig.originals?.includes(original)) {
-				throw new Error(
-					`${red("✖")} The original repository already exists`
-				);
+				boom(`The original repository already exists`);
 			}
 			console.log(`${blue("ℹ [wlint]")} Injecting wlint config file...`);
 			fs.writeFileSync(
@@ -30,9 +29,7 @@ function setConfig(
 			break;
 		case "remove":
 			if (!originalConfig.originals?.includes(original)) {
-				throw new Error(
-					`${red("✖")} The original repository does not exist`
-				);
+				boom(`The original repository does not exist`);
 			}
 			console.log(`${blue("ℹ [wlint]")} Removing original repository...`);
 			fs.writeFileSync(
@@ -69,10 +66,7 @@ export const origin = async (argv: Iminimist) => {
 			},
 		],
 		{
-			onCancel: () => {
-				console.log(`${red("✖")} Operation cancelled`);
-				process.exit(0);
-			},
+			onCancel: promptsOnCancel,
 		}
 	);
 

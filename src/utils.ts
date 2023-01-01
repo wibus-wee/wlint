@@ -7,18 +7,18 @@ import {
 } from "./constants";
 import { InpmPackages } from "./types";
 import path from "node:path";
-import { blue, cyan, red, yellow } from "kolorist";
+import { blue, cyan, yellow } from "kolorist";
+import { boom } from "./error";
 
 // only for origin and alias method
 export function validateType(_: string[]) {
 	if (!(_[1] === "add" || _[1] === "remove")) {
-		console.log(`${red("✖")} Invalid type`);
-		process.exit(1);
+		boom(`You have not entered a action: add|remove`);
 	}
 }
 
 // only for config method
-export function isValidateConfigType(_: string[] | undefined) {
+export function validateConfigType(_: string[] | undefined) {
 	if (
 		!_ ||
 		!(
@@ -28,26 +28,17 @@ export function isValidateConfigType(_: string[] | undefined) {
 			_[1] === "list"
 		)
 	) {
-		console.log(
-			`${red("✖")} You have not entered a action: set|get|remove|list`
-		);
-		process.exit(1);
+		boom(`You have not entered a action: set|get|remove|list`);
+		return;
 	}
 	if (_[1] !== "list" && !_[2]) {
-		console.log(`${red("✖")} You have not entered a key`);
-		process.exit(1);
+		boom(`You have not entered a key`);
 	}
 	if (_[1] !== "list" && !isKeySupported(_[2])) {
-		console.log(
-			`${red(
-				"✖"
-			)} Invalid key, supported keys: ${SUPPORT_CONFIG_KEYS.join(", ")}`
-		);
-		process.exit(1);
+		boom(`Invalid key, supported keys: ${SUPPORT_CONFIG_KEYS.join(", ")}`);
 	}
 	if (_[1] !== "list" && _[1] !== "get" && !isKeyValid(_[2], _[3])) {
-		console.log(`${red("✖")} Invalid value type `);
-		process.exit(1);
+		boom(`Invalid value for key ${_[2]}`);
 	}
 }
 
@@ -56,7 +47,8 @@ export function getShell(): string {
 	const path = "ZSH_NAME" in env ? "ZSH_NAME" : "SHELL";
 	const shell = env[path];
 	if (!shell) {
-		throw new Error("Can' get shell name.");
+		boom("Unable to detect shell, are you sure you are using a shell?");
+		return ""; // unreachable, but needed for type checking
 	}
 	return shell.split("/").pop()!;
 }
@@ -65,7 +57,9 @@ export function getConfigFile() {
 	// Auto create wlint config file
 	try {
 		const file = fs.readFileSync(CONFIG, "utf8").toString();
-		if (!file) throw new Error("File is empty");
+		if (!file) {
+			boom(`Config file is empty, please check it`);
+		}
 		return file;
 	} catch {
 		fs.writeFileSync(CONFIG, JSON.stringify({ alias: [] }));
@@ -185,13 +179,12 @@ export function checkConflict() {
 		const files = fs.readdirSync("./");
 		const isConflict = files.some((f) => f.includes(file));
 		if (isConflict && !__DEV__) {
-			console.log(
-				`${red("✖")} Please solve ${linter.replace(
+			boom(
+				`Please solve ${linter.replace(
 					".json",
 					""
 				)} config conflict: ${yellow(file)} is already exist`
 			);
-			process.exit(1);
 		}
 	}
 }
@@ -242,8 +235,7 @@ export function autoMatcher(autoMatchConfig?: {
 		return undefined;
 	}
 	if (!fs.existsSync(path.resolve(process.cwd(), "package.json"))) {
-		console.log(`${red("✖")} Please run this command in a project folder`);
-		process.exit(1);
+		boom(`Please run this command in a project folder`);
 	}
 	const packages = require(path.resolve(process.cwd(), "package.json"));
 	let dependencies: string[] = [];
@@ -302,10 +294,7 @@ export function autoMatcher(autoMatchConfig?: {
 		}
 	}
 	if (matchers.length > 1) {
-		console.log(
-			`${red("✖")} Multiple category match, please specify category`
-		);
-		process.exit(1);
+		boom(`Auto match category conflict: ${yellow(matchers.join(", "))}`);
 	}
 	if (matchers.length) {
 		console.log(
