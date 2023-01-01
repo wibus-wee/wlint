@@ -287,7 +287,7 @@ export const main = async (argv: Iminimist) => {
 		[
 			"add",
 			"-D",
-			npmPackages.map((item) => item.packages.join(" ")).join(""),
+			npmPackages.map((item) => item.packages.join(" ")).join(" "),
 		],
 		{ stdio: "inherit" }
 	);
