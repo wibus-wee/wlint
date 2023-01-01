@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, cyan, green, red } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { configFile, getShell, getUserHome, isValidateType } from "../utils";
+import { configFile, getShell, getUserHome, validateType } from "../utils";
 import { CONFIG } from "../constants";
 
 function consoleSource(filename: string) {
@@ -10,7 +10,7 @@ function consoleSource(filename: string) {
 	console.log(`Or run ${cyan(`source ${filename}`)}`);
 }
 export const alias = async (argv: Iminimist) => {
-	isValidateType(argv._);
+	validateType(argv._);
 	const shell = getShell();
 	const type = (function () {
 		if (argv._[1] === "add") return "install";

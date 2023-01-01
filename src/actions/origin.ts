@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, green, red, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { configFile, isValidateType } from "../utils";
+import { configFile, validateType } from "../utils";
 import { CONFIG } from "../constants";
 
 function setConfig(
@@ -58,7 +58,7 @@ function setConfig(
 }
 
 export const origin = async (argv: Iminimist) => {
-	isValidateType(argv._);
+	validateType(argv._);
 	const res = await prompts(
 		[
 			{

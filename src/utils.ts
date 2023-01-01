@@ -10,8 +10,8 @@ import path from "node:path";
 import { blue, cyan, red, yellow } from "kolorist";
 
 // only for origin and alias method
-export function isValidateType(_: string[] | undefined) {
-	if (!_ || !(_[1] === "add" || _[1] === "remove")) {
+export function validateType(_: string[]) {
+	if (!(_[1] === "add" || _[1] === "remove")) {
 		console.log(`${red("✖")} Invalid type`);
 		process.exit(1);
 	}
