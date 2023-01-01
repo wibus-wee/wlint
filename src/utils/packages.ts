@@ -4,8 +4,10 @@ import fs from "node:fs";
 
 export function isNpmPackage(name: string) {
 	return (
-		(name.startsWith("@") && name.includes("/")) ||
-		(!name.startsWith("@") && !name.includes("/"))
+		/^[a-zA-Z0-9@/]+$/.test(name) &&
+		((name.startsWith("@") &&
+			name.indexOf("/") === name.lastIndexOf("/")) ||
+			(!name.startsWith("@") && !name.includes("/")))
 	);
 }
 
