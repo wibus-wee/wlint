@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
 import prompts from "prompts";
-import { ORIGINAL, SUPPORT_LINTER } from "../constants";
+import { IGNORE_DIRS, ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
 	autoMatcher,
@@ -215,24 +215,29 @@ export const main = async (argv: Iminimist) => {
 
 	console.log(blue("ℹ"), "Project Category:", selectCategory);
 
-	if (isNpm) {
-		const data = cache!.files;
-		Object.keys(data).forEach((key) => {
-			if (key.match(/\//g)?.length === 2) {
-				const category = key.split("/")[0];
-				if (category === selectCategory) {
-					const file = key.split("/")[1];
-					fileList.push(file);
+	if (selectCategory) {
+		if (isNpm) {
+			const data = cache!.files;
+			Object.keys(data).forEach((key) => {
+				if (key.match(/\//g)?.length === 2) {
+					const category = key.split("/")[0];
+					if (category === selectCategory) {
+						const file = key.split("/")[1];
+						fileList.push(file); // push category file to fileList
+					}
 				}
-			}
-		});
-	} else {
-		const list = await getGitHubFiles(original, selectCategory);
-		list.forEach((file) => {
-			if (file.type === "file" && file.path.includes(selectCategory)) {
-				fileList.push(file.name);
-			}
-		});
+			});
+		} else {
+			const list = await getGitHubFiles(original, selectCategory);
+			list.forEach((file) => {
+				if (
+					file.type === "file" &&
+					file.path.includes(selectCategory)
+				) {
+					fileList.push(file.name);
+				}
+			});
+		}
 	}
 	fileList = fileList.filter(
 		(file) => SUPPORT_LINTER.includes(file) || file === "config.json"
@@ -245,17 +250,16 @@ export const main = async (argv: Iminimist) => {
 	let data: object = {};
 
 	for (const linter of SUPPORT_LINTER) {
-		if (selectCategory) {
-			console.log(`${blue("ℹ")} Configuring ${linter}...`);
-			if (fileList.includes(`${linter}`)) {
-				const aliases = repoConfig?.aliases || {};
-				const path = `${selectCategory}/${linter}`;
-				if (isNpm) {
-					const fileId = cache!.files[path].hex;
-					data = await getNpmPackageFile(original, fileId);
-				} else {
-					data = await getGitHubFile(original, path);
-				}
+		console.log(`${blue("ℹ")} Configuring ${linter}...`);
+		if (fileList.includes(`${linter}`)) {
+			const aliases = repoConfig?.aliases || {};
+			const path = `${
+				selectCategory ? `${selectCategory}/` : ""
+			}${linter}`;
+			if (isNpm) {
+				const fileId = cache!.files[path].hex;
+				data = await getNpmPackageFile(original, fileId);
+			} else {
 				console.log(
 					`${blue("ℹ")} Generating .${linter.replace(
 						".json",
@@ -280,6 +284,7 @@ export const main = async (argv: Iminimist) => {
 						""
 					)} npm packages recorded`
 				);
+				data = await getGitHubFile(original, path);
 			}
 		}
 	}
