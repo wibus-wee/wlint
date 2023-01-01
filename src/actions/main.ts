@@ -30,10 +30,10 @@ export const main = async (argv: Iminimist) => {
 	const config = userConfig;
 	let packageManager = detectPkgManage();
 	// 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
-	const configOriginals = config.originals?.length
-		? config.originals
-		: argv.original
-		? [argv.original]
+	const configOriginals = config.origins?.length
+		? config.origins
+		: argv.origin
+		? [argv.origin]
 		: [];
 
 	if (configOriginals.length === 0) {
