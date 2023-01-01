@@ -127,14 +127,14 @@ You can create your own config origin, and you can also use the config origin th
 
 ```bash
 wlint origin add <your config origin repository name>
-# wlint origin add wibus-wee/wlint-config-origin
+# wlint origin add wibus-wee/wlint-config
 # or you can use npm package name (if you have published your config to npm)
-# wlint origin add @wibus-wee/wlint-config-origin
+# wlint origin add @wibus-wee/wlint-config
 
 # If you want to remove the config origin, you can run the following command:
 wlint origin remove <your config origin repository name>
-# wlint origin remove wibus-wee/wlint-config-origin
-# wlint origin remove @wibus-wee/wlint-config-origin
+# wlint origin remove wibus-wee/wlint-config
+# wlint origin remove @wibus-wee/wlint-config
 ```
 3. Then you can use your config origin in your project!
 
@@ -250,7 +250,7 @@ When you init linter with lint, wlint will automatically record the config origi
 
 ```json5
 {
-  "origin": "wibus-wee/wlint-config-origin",
+  "origin": "wibus-wee/wlint-config",
   "category": "nextjs",
   // ...more config
 }
