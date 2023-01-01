@@ -21,6 +21,7 @@ import {
 } from "../request";
 import spawn from "cross-spawn";
 import { boom, promptsOnCancel } from "../error";
+import { setWlintConfig } from "src/utils/wlintrc";
 
 export const main = async (argv: Iminimist) => {
 	validateConfigConflict();
@@ -105,7 +106,7 @@ export const main = async (argv: Iminimist) => {
 
 	const original =
 		configOriginals.length > 1 ? res.original : configOriginals[0];
-	console.log(`Using ${green(original)} as original.`);
+	console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
 	const isNpm = isNpmPackage(original);
 	const categories: Array<string> = [];
 	let fileList: Array<string> = [];
@@ -290,4 +291,9 @@ export const main = async (argv: Iminimist) => {
 	);
 
 	console.log(`${green("✔")} Linter dependencies installed`);
+
+	console.log(`${blue("ℹ")} Generating .wlintrc...`);
+	setWlintConfig("origin", original);
+	setWlintConfig("category", selectCategory);
+	console.log(`${green("✔")} .wlintrc auto generated`);
 };
