@@ -13,7 +13,7 @@
 
 - ⛏️ [Linter Configs Support](#linter-configs-support)
 - 😄 [Linter Packages Auto Install](#linter-packages-auto-install)
-- 🤖️ [Quickly linting](#quickly-linting)
+- 🤖️ [Quickly Lint](#quickly-lint)
 - 🍰 [Linter Config Category](#config-category)
 - 🚀 [Automatic matching category](#automatic-matching-category)
 - 🎉 [Custom Linter Configs Origin](#custom-linter-configs-origin)
@@ -88,7 +88,7 @@ wlint will automatically install the linter config package according to the lint
 If the package has alias, you should configure the alias in `config.json` file (see [Packages Alias](#packages-alias) section).
 
 
-## Quickly linting
+## Quickly Lint
 
 You can quickly lint your project by running the following command:
 
