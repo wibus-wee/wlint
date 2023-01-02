@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
-import prompts from "prompts";
 import { IGNORE_DIRS, ORIGINAL, SUPPORT_LINTER } from "../constants";
 import { Iminimist, InpmPackages, NPMFiles } from "../types";
 import {
@@ -23,7 +22,8 @@ import {
   getNpmPackageInfo,
 } from "../request";
 import spawn from "cross-spawn";
-import { boom, promptsOnCancel } from "../error";
+import { boom } from "../error";
+import { confirm, select } from "src/prompts";
 
 export const main = async (argv: Iminimist) => {
   validateConfigConflict();
@@ -38,27 +38,15 @@ export const main = async (argv: Iminimist) => {
     : [];
 
   if (configOriginals.length === 0) {
-    const res = await prompts(
-      [
-        {
-          type: "confirm",
-          name: "useDefault",
-          message: `${blue(
-            "✖"
-          )} Can't detect origin. Do you want to use the default one? (${green(
-            `${ORIGINAL}`
-          )})`,
-          initial: true,
-        },
-      ],
-      {
-        onCancel: promptsOnCancel,
-      }
+    const useDefault = await confirm(
+      `Can't detect origin. Do you want to use the default one? (${green(
+        `${ORIGINAL}`
+      )})`
     );
-    if (res.useDefault) {
+
+    if (useDefault) {
       configOriginals.push(ORIGINAL);
-    }
-    if (!res.useDefault) {
+    } else {
       boom(`Can't detect original, please specify one.`);
     }
   }
@@ -69,45 +57,19 @@ export const main = async (argv: Iminimist) => {
 
   if (!packageManager) {
     console.log(`${blue("✖")} Can't detect package manager.`);
-    const res = await prompts(
-      {
-        type: "select",
-        name: "packageManager",
-        message: `${blue(
-          "✖"
-        )} Can't detect package manager. Please select one:`,
-        choices: [
-          { title: "npm", value: "npm" },
-          { title: "yarn", value: "yarn" },
-          { title: "pnpm", value: "pnpm" },
-        ],
-      },
-      {
-        onCancel: promptsOnCancel,
-      }
-    );
-    packageManager = res.packageManager;
+    packageManager = await select({
+      message: `${blue("✖")} Can't detect package manager. Please select one:`,
+      choices: ["npm", "yarn", "pnpm"],
+    });
   }
 
-  const res = await prompts(
-    [
-      {
-        type: configOriginals.length > 1 ? "select" : null,
-        name: "original",
-        message: "Which original do you want to use?",
-        choices: configOriginals.map((original) => ({
-          title: original,
-          value: original,
-        })),
-      },
-    ],
-    {
-      onCancel: promptsOnCancel,
-    }
-  );
-
   const original =
-    configOriginals.length > 1 ? res.original : configOriginals[0];
+    configOriginals.length > 1
+      ? select({
+          message: "Which original do you want to use?",
+          choices: configOriginals,
+        })
+      : configOriginals[0];
   console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
   const isNpm = isNpmPackage(original);
   let categories: Array<string> = [];
@@ -191,24 +153,11 @@ export const main = async (argv: Iminimist) => {
     category = undefined; // reset category
   }
 
-  const selectFileList = await prompts(
-    [
-      {
-        type: categories.length > 0 && !category ? "select" : null,
-        name: "category",
-        message: "Which category do you want to use?",
-        choices: categories.map((category) => ({
-          title: category,
-          value: category,
-        })),
-      },
-    ],
-    {
-      onCancel: promptsOnCancel,
-    }
-  );
-
-  const selectCategory = selectFileList.category || category;
+  const selectCategory =
+    (await select({
+      message: "Which category do you want to use?",
+      choices: categories,
+    })) || category;
 
   console.log(blue("ℹ"), "Project Category:", selectCategory);
 
