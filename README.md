@@ -9,6 +9,10 @@
 </a>
 </div>
 
+wlint is a cli to config your project lint quickly. **Just enter `wlint`**, wlint will automatically grab the appropriate lint configuration file, and automatically install the dependencies.
+
+wlint can automatically analyze the dependencies in the project and automatically match the config category. (see [Automatic matching category](#automatic-matching-category)) For example, you can automatically match react configuration if you have react package.
+
 ## Features
 
 - ⛏️ [Linter Configs Support](#linter-configs-support)
