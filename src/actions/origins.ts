@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
-import prompts from "prompts";
 import { Iminimist } from "../types";
 import { prettyStringify, userConfig, validateType } from "../utils";
 import { CONFIG } from "../constants";
-import { boom, promptsOnCancel } from "../error";
+import { boom } from "../error";
+import { text } from "src/prompts";
 
 function setConfig(
   type: string,
@@ -54,21 +54,13 @@ function setConfig(
 
 export const origins = async (argv: Iminimist) => {
   validateType(argv._);
-  const res = await prompts(
-    [
-      {
-        type: !argv._[2] ? "text" : null,
-        name: "origin",
-        message: "Enter the origin repository",
-        initial: "wibus-wee/wlint-config",
-      },
-    ],
-    {
-      onCancel: promptsOnCancel,
-    }
-  );
 
-  const origin = argv._[2] || res.origin;
+  const origin =
+    argv._[2] ||
+    (await text({
+      message: "Enter the origin repository",
+      initial: "wibus-wee/wlint-config",
+    }));
   const originConfig = userConfig;
 
   setConfig(argv._[1], originConfig, origin);
