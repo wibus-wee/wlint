@@ -13,6 +13,7 @@ import {
   validateConfigConflict,
   setWlintConfig,
   __DEV__,
+  prettyStringify,
 } from "../utils";
 import {
   getGitHubFile,
@@ -256,7 +257,7 @@ export const main = async (argv: Iminimist) => {
         );
         data = await getGitHubFile(original, path);
       }
-      generateLinterRcFile(linter, JSON.stringify(data));
+      generateLinterRcFile(linter, prettyStringify(data));
       console.log(`${green("✔")} .${linter.replace(".json", "")}rc generated`);
       npmPackages.push({
         linter,

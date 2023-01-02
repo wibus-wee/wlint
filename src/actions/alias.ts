@@ -2,7 +2,13 @@ import fs from "node:fs";
 import { blue, cyan, green } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { userConfig, getShell, userHome, validateType } from "../utils";
+import {
+  userConfig,
+  getShell,
+  userHome,
+  validateType,
+  prettyStringify,
+} from "../utils";
 import { CONFIG } from "../constants";
 import { boom, promptsOnCancel } from "../error";
 
@@ -85,7 +91,7 @@ export const alias = async (argv: Iminimist) => {
           alias: [...userConfig.alias, alias],
         };
         console.log(`${blue("ℹ [wlint]")} Injecting wlint config file...`);
-        fs.writeFileSync(CONFIG, JSON.stringify(config));
+        fs.writeFileSync(CONFIG, prettyStringify(config));
 
         console.log(`${green("✔")} Alias ${cyan(alias)} installed`);
       }
@@ -103,7 +109,7 @@ export const alias = async (argv: Iminimist) => {
           alias: configAlias.filter((a) => !res.alias.includes(a)),
         };
         console.log(`${blue("ℹ [wlint]")} Injecting wlint config file...`);
-        fs.writeFileSync(CONFIG, JSON.stringify(config));
+        fs.writeFileSync(CONFIG, prettyStringify(config));
         console.log(`${green("✔")} Alias ${cyan(alias)} uninstalled`);
       }
       break;

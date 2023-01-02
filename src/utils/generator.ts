@@ -31,3 +31,7 @@ export function generateLinterRcFile(linter: string, json: string) {
     encoding: "utf-8",
   });
 }
+
+export function prettyStringify(value: any) {
+  return JSON.stringify(value, null, 2);
+}
