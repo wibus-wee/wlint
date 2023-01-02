@@ -68,14 +68,17 @@ export type TextOptions = BaseProps & {
   initial?: string;
 };
 
-export async function text(optsRaw: TextOptions) {
-  const { message, initial } = optsRaw;
-  return (
-    await prompts({
-      type: "text",
-      message,
-      initial,
-      name: "result",
-    })
-  ).result as string;
+export async function text(optsRaw: TextOptions | string) {
+  const opts: prompts.PromptObject = {
+    type: "text",
+    name: "result",
+  };
+  if (typeof optsRaw === "string") {
+    opts.message = optsRaw;
+  } else {
+    const { message, initial } = optsRaw;
+    opts.message = message;
+    opts.initial = initial;
+  }
+  return (await prompts(opts, promptsOptions)).result as string;
 }
