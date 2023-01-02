@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { CONFIG } from "../constants";
+import { prettyStringify } from "./generator";
 
 export const __DEV__ = process.env.NODE_ENV === "development";
 
@@ -12,7 +13,7 @@ export function getConfigFile() {
     }
     return file;
   } catch {
-    fs.writeFileSync(CONFIG, JSON.stringify({ alias: [] }));
+    fs.writeFileSync(CONFIG, prettyStringify({ alias: [] }));
     return fs.readFileSync(CONFIG, "utf8").toString();
   }
 }
@@ -20,7 +21,7 @@ export function getConfigFile() {
 export function setConfig(key: string, value: string) {
   const file = JSON.parse(getConfigFile());
   file[key] = value;
-  fs.writeFileSync(CONFIG, JSON.stringify(file));
+  fs.writeFileSync(CONFIG, prettyStringify(file));
 }
 
 export const userConfig = JSON.parse(getConfigFile());

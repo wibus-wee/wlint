@@ -17,6 +17,7 @@ import {
   hasWlintConfig,
   isNpmPackage,
   parseNpmPackages,
+  prettyStringify,
   setWlintConfig,
   wlintConfig,
   __DEV__,
@@ -147,7 +148,7 @@ export async function update() {
         );
         data = await getGitHubFile(origin, path);
       }
-      generateLinterRcFile(linter, JSON.stringify(data));
+      generateLinterRcFile(linter, prettyStringify(data));
       console.log(`${green("✔")} .${linter.replace(".json", "")}rc generated`);
       npmPackages.push({
         linter,

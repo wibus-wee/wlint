@@ -2,7 +2,7 @@ import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
 import prompts from "prompts";
 import { Iminimist } from "../types";
-import { userConfig, validateType } from "../utils";
+import { prettyStringify, userConfig, validateType } from "../utils";
 import { CONFIG } from "../constants";
 import { boom, promptsOnCancel } from "../error";
 
@@ -19,7 +19,7 @@ function setConfig(
       console.log(`${blue("ℹ [wlint]")} Injecting wlint config file...`);
       fs.writeFileSync(
         CONFIG,
-        JSON.stringify({
+        prettyStringify({
           ...originConfig,
           origins: [...(originConfig.origins || []), origin],
         }),
@@ -34,7 +34,7 @@ function setConfig(
       console.log(`${blue("ℹ [wlint]")} Removing origin repository...`);
       fs.writeFileSync(
         CONFIG,
-        JSON.stringify({
+        prettyStringify({
           ...originConfig,
           origins: originConfig.origins.filter((_: string) => _ !== origin),
         }),

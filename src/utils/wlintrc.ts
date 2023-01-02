@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { prettyStringify } from "./generator";
 
 export function getWlintConfig() {
   try {
@@ -18,5 +19,5 @@ export const wlintConfig = getWlintConfig();
 export function setWlintConfig(key: string, value: any) {
   const config = getWlintConfig();
   config[key] = value;
-  fs.writeFileSync(".wlintrc", JSON.stringify(config));
+  fs.writeFileSync(".wlintrc", prettyStringify(config));
 }
