@@ -8,7 +8,7 @@ export async function config(argv: Iminimist) {
 
   const action = argv._[1];
   const key = argv._[2];
-  const value = argv._[3].split(",").map((_) => _.trim());
+  const value = argv._[3]?.split(",").map((_) => _.trim());
   if (Array.isArray(value)) {
     value.forEach((v) => {
       switcher(action, key, v);
