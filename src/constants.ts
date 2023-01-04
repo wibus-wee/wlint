@@ -1,5 +1,10 @@
+import path from "path";
+import { __DEV__ } from "./utils";
 import { userHome } from "./utils/user";
-export const WLINT = `${userHome}/.config`;
+
+export const WLINT = __DEV__
+  ? `${userHome}/.wlint`
+  : `${path.resolve(process.cwd())}/temp`;
 export const CONFIG = `${WLINT}/.wlintrc.json`;
 export const ORIGINAL = `wibus-wee/wlint-config`;
 
