@@ -1,36 +1,31 @@
 import fs from "node:fs";
 import { blue, green, yellow } from "kolorist";
-import { IGNORE_DIRS, ORIGINAL, SUPPORT_LINTER } from "../constants";
-import { Iminimist, InpmPackages, NPMFiles } from "../types";
+import { ORIGINAL, SUPPORT_LINTER } from "../constants";
+import { Iminimist, NPMFiles } from "../types";
 import {
   autoMatcher,
   detectPkgManage,
-  generateLinterRcFile,
   isNpmPackage,
-  parseNpmPackages,
   userConfig,
   validateConfigConflict,
-  setWlintConfig,
   __DEV__,
-  prettyStringify,
 } from "../utils";
-import {
-  getGitHubFile,
-  getGitHubFiles,
-  getNpmPackageFile,
-  getNpmPackageFiles,
-  getNpmPackageInfo,
-} from "../request";
+import { getGitHubFiles } from "../request";
 import spawn from "cross-spawn";
 import { boom } from "../error";
-import { confirm, select } from "src/prompts";
+import { confirm, select } from "../prompts";
+import {
+  configureLinters,
+  fetchCategoriesAndFiles,
+  fetchRepoConfig,
+  updateWlintRC,
+} from "../utils/core";
 
 export const main = async (argv: Iminimist) => {
   validateConfigConflict();
 
   const config = userConfig;
   let packageManager = detectPkgManage();
-  // 这个要留给 用户 去选择要用谁的，如果只有一个的话就其实不需要选择了
   const configOriginals = config.origins?.length
     ? config.origins
     : argv.origin
@@ -71,77 +66,20 @@ export const main = async (argv: Iminimist) => {
         })
       : configOriginals[0];
   console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
+  // 开始重复
   const isNpm = isNpmPackage(original);
   let categories: Array<string> = [];
   let fileList: Array<string> = [];
-  let cache: NPMFiles;
-  if (isNpm) {
-    const latest = (await getNpmPackageInfo(original))["dist-tags"].latest;
-    if (!latest) {
-      boom(`Can't get latest version of ${original}`);
-    }
-    const list = await getNpmPackageFiles(original, latest);
-    cache = list;
+  let cache: NPMFiles | undefined = undefined;
 
-    Object.keys(list.files).forEach((key) => {
-      if (!key?.match(/\//g)?.length) {
-        categories.push(key);
-      }
-      if (key?.match(/\//g)?.length === 2) {
-        const category = key.split("/")[0];
-        if (!categories.includes(category)) {
-          categories.push(category);
-        }
-      }
-      if (key === "config.json") {
-        fileList.push(key);
-      }
-    });
-
-    if (categories.length === 0) {
-      Object.keys(list.files).forEach((key) => {
-        const file = key.split("/")[1];
-        fileList.push(file);
-      });
-    }
-  } else {
-    const list = await getGitHubFiles(original);
-    list.forEach((file) => {
-      if (file.type === "dir") {
-        categories.push(file.name);
-      }
-      if (file.type === "file" || file.name === "config.json") {
-        fileList.push(file.name);
-      }
-    });
-
-    if (categories.length === 0) {
-      list.forEach((file) => {
-        if (file.type === "file") {
-          fileList.push(file.name);
-        }
-      });
-    }
-  }
-
-  categories = categories.filter((category) => !category.includes("."));
-  categories = categories.filter((category) => !IGNORE_DIRS.includes(category));
-
-  fileList = fileList.filter(
-    (file) => SUPPORT_LINTER.includes(file) || file === "config.json"
+  const { _categories, _fileList, _cache } = await fetchCategoriesAndFiles(
+    isNpm
   );
+  categories = _categories;
+  fileList = _fileList;
+  cache = _cache;
 
-  console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-  let repoConfig: any;
-  if (fileList.includes("config.json")) {
-    if (isNpm) {
-      const id = cache!.files[`config.json`].hex;
-      repoConfig = await getNpmPackageFile(original, id);
-    } else {
-      repoConfig = await getGitHubFile(original, `config.json`);
-    }
-    repoConfig = repoConfig ? JSON.parse(JSON.stringify(repoConfig)) : {};
-  }
+  const repoConfig = await fetchRepoConfig(isNpm, fileList, original, cache);
 
   let category: string | undefined =
     autoMatcher(repoConfig?.categories) || argv.c || argv.category;
@@ -186,37 +124,14 @@ export const main = async (argv: Iminimist) => {
     (file) => SUPPORT_LINTER.includes(file) || file === "config.json"
   );
 
-  const npmPackages = new Array<InpmPackages>(); // 需要安装的包
-
-  console.log(`${blue("ℹ")} Configuring linter...`);
-
-  let data: object = {};
-
-  for (const linter of SUPPORT_LINTER) {
-    console.log(`${blue("ℹ")} Configuring ${linter}...`);
-    if (fileList.includes(`${linter}`)) {
-      const aliases = repoConfig?.aliases || {};
-      const path = `${selectCategory ? `${selectCategory}/` : ""}${linter}`;
-      if (isNpm) {
-        const fileId = cache!.files[path].hex;
-        data = await getNpmPackageFile(original, fileId);
-      } else {
-        console.log(
-          `${blue("ℹ")} Generating .${linter.replace(".json", "")}rc...`
-        );
-        data = await getGitHubFile(original, path);
-      }
-      generateLinterRcFile(linter, prettyStringify(data));
-      console.log(`${green("✔")} .${linter.replace(".json", "")}rc generated`);
-      npmPackages.push({
-        linter,
-        packages: parseNpmPackages(linter, JSON.stringify(data), aliases),
-      });
-      console.log(
-        `${green("✔")} ${linter.replace(".json", "")} npm packages recorded`
-      );
-    }
-  }
+  const npmPackages = await configureLinters(
+    isNpm,
+    fileList,
+    original,
+    selectCategory,
+    repoConfig,
+    cache
+  );
 
   console.log(`${blue("ℹ")} Installing linter dependencies...`);
 
@@ -244,9 +159,5 @@ export const main = async (argv: Iminimist) => {
 
   console.log(`${green("✔")} Linter dependencies installed`);
 
-  console.log(`${blue("ℹ")} Generating .wlintrc...`);
-  setWlintConfig("origin", original);
-  setWlintConfig("category", selectCategory);
-  setWlintConfig("packages", npmPackages.map((item) => item.packages).flat());
-  console.log(`${green("✔")} .wlintrc auto generated`);
+  updateWlintRC(original, selectCategory, npmPackages);
 };
