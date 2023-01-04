@@ -1,11 +1,17 @@
 import fs from "node:fs";
-import { CONFIG } from "../constants";
+import { CONFIG, WLINT } from "../constants";
 import { prettyStringify } from "./generator";
 
 export const __DEV__ = process.env.NODE_ENV === "development";
 
 export function getConfigFile() {
   // Auto create wlint config file
+  if (__DEV__) {
+    // check if temp folder exists
+    if (!fs.existsSync(WLINT)) {
+      fs.mkdirSync(WLINT);
+    }
+  }
   try {
     const file = fs.readFileSync(CONFIG, "utf8").toString();
     if (!file) {
