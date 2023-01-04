@@ -113,7 +113,7 @@ export async function fetchRepoConfig(
   cache?: NPMFiles | undefined
 ) {
   let repoConfig: any = {};
-  console.log(`${blue("ℹ")} Scaning wlint repo config...`);
+  console.log(`${blue("ℹ")} Fetching wlint repo config...`);
   if (fileList.includes("config.json")) {
     if (isNpm) {
       const id = cache!.files[`config.json`].hex;
@@ -123,6 +123,7 @@ export async function fetchRepoConfig(
     }
     repoConfig = repoConfig ? JSON.parse(JSON.stringify(repoConfig)) : {};
   }
+  console.log(`${green("✔")} Fetched wlint repo config`);
   return repoConfig;
 }
 

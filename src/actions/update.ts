@@ -25,7 +25,7 @@ export async function update() {
   const origin: string = config.origin;
   const packageManager = detectPkgManage();
   const category: string | undefined = config.category;
-  // 开始重复
+
   const isNpm = isNpmPackage(origin);
   let categories: Array<string> = [];
   let fileList: Array<string> = [];

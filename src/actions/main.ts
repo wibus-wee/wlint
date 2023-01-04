@@ -66,7 +66,7 @@ export const main = async (argv: Iminimist) => {
         })
       : configOriginals[0];
   console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
-  // 开始重复
+
   const isNpm = isNpmPackage(original);
   let categories: Array<string> = [];
   let fileList: Array<string> = [];
