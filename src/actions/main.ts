@@ -23,7 +23,7 @@ import {
 } from "../request";
 import spawn from "cross-spawn";
 import { boom } from "../error";
-import { confirm, select } from "src/prompts";
+import { confirm, select } from "../prompts";
 
 export const main = async (argv: Iminimist) => {
   validateConfigConflict();
