@@ -4,7 +4,7 @@ import { Iminimist } from "../types";
 import { prettyStringify, userConfig, validateType } from "../utils";
 import { CONFIG } from "../constants";
 import { boom } from "../error";
-import { text } from "src/prompts";
+import { text } from "../prompts";
 
 function setConfig(
   type: string,

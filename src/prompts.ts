@@ -50,6 +50,7 @@ export async function select(optsRaw: SelectProps) {
     name: "result",
     type: optsRaw.multiselect ? "multiselect" : "select",
     choices: [] as Array<prompts.Choice>,
+    message: optsRaw.message,
   };
   optsRaw.choices.forEach((choice) => {
     if (typeof choice === "string") {

@@ -10,7 +10,7 @@ import {
 } from "../utils";
 import { CONFIG } from "../constants";
 import { boom } from "../error";
-import { select, text } from "src/prompts";
+import { select, text } from "../prompts";
 
 function consoleSource(filename: string) {
   console.log(`\nYou should restart your terminal to apply the changes`);
