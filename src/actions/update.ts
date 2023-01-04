@@ -5,7 +5,7 @@ import {
   fetchCategoriesAndFiles,
   fetchRepoConfig,
   updateWlintRC,
-} from "src/utils/core";
+} from "../utils/core";
 import { boom } from "../error";
 import { NPMFiles } from "../types";
 import {
@@ -34,6 +34,7 @@ export async function update() {
 
   const { _categories, _fileList, _cache } = await fetchCategoriesAndFiles(
     isNpm,
+    origin,
     category
   );
   categories = _categories;

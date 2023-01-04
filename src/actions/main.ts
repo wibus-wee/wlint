@@ -73,7 +73,8 @@ export const main = async (argv: Iminimist) => {
   let cache: NPMFiles | undefined = undefined;
 
   const { _categories, _fileList, _cache } = await fetchCategoriesAndFiles(
-    isNpm
+    isNpm,
+    original
   );
   categories = _categories;
   fileList = _fileList;

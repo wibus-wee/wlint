@@ -1,6 +1,6 @@
 import { blue, green } from "kolorist";
-import { IGNORE_DIRS, SUPPORT_LINTER } from "src/constants";
-import { InpmPackages, NPMFiles } from "src/types";
+import { IGNORE_DIRS, SUPPORT_LINTER } from "../constants";
+import { InpmPackages, NPMFiles } from "../types";
 import { boom } from "../error";
 import {
   getNpmPackageInfo,
@@ -15,6 +15,7 @@ import { setWlintConfig } from "./wlintrc";
 
 export async function fetchCategoriesAndFiles(
   isNpm: boolean,
+  origin: string,
   category?: string | undefined
 ) {
   let categories: Array<string> = [];
