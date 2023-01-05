@@ -61,7 +61,7 @@
   "devDependencies": {
     "@innei-util/eslint-config-ts": "0.8.2",
     "@innei-util/prettier": "0.8.2",
-    "@innei/eslint-config-ts": "0.9.6",
+    "@innei/eslint-config-ts": "0.9.7",
     "@types/cross-spawn": "^6.0.2",
     "@types/minimist": "^1.2.2",
     "@types/node": "18.11.18",
