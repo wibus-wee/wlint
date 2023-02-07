@@ -70,7 +70,7 @@
     "eslint": "8.33.0",
     "husky": "8.0.3",
     "kolorist": "^1.6.0",
-    "lint-staged": "13.1.0",
+    "lint-staged": "13.1.1",
     "minimist": "^1.2.7",
     "pnpm": "7.23.0",
     "prettier": "2.8.3",
