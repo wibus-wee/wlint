@@ -26,7 +26,7 @@ specifiers:
   rimraf: 4.1.2
   typescript: 4.9.5
   unbuild: 1.1.2
-  vite: 4.1.3
+  vite: 4.1.4
   vitest: 0.26.3
 
 dependencies:
@@ -52,7 +52,7 @@ devDependencies:
   rimraf: 4.1.2
   typescript: 4.9.5
   unbuild: 1.1.2
-  vite: 4.1.3_@types+node@18.14.0
+  vite: 4.1.4_@types+node@18.14.0
   vitest: 0.26.3
 
 packages:
@@ -3653,7 +3653,7 @@ packages:
       pathe: 0.2.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.1.3_@types+node@18.14.0
+      vite: 4.1.4_@types+node@18.14.0
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -3664,8 +3664,8 @@ packages:
       - terser
     dev: true
 
-  /vite/4.1.3_@types+node@18.14.0:
-    resolution: {integrity: sha512-0Zqo4/Fr/swSOBmbl+HAAhOjrqNwju+yTtoe4hQX9UsARdcuc9njyOdr6xU0DDnV7YP0RT6mgTTOiRtZgxfCxA==}
+  /vite/4.1.4_@types+node@18.14.0:
+    resolution: {integrity: sha512-3knk/HsbSTKEin43zHu7jTwYWv81f8kgAL99G5NWBcA1LKvtvcVAC4JjBH1arBunO9kQka+1oGbrMKOjk4ZrBg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -3733,7 +3733,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.0
       tinyspy: 1.0.2
-      vite: 4.1.3_@types+node@18.14.0
+      vite: 4.1.4_@types+node@18.14.0
       vite-node: 0.26.3_@types+node@18.14.0
     transitivePeerDependencies:
       - less
