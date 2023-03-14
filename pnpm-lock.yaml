@@ -20,7 +20,7 @@ specifiers:
   kolorist: ^1.6.0
   lint-staged: 13.1.4
   minimist: ^1.2.7
-  pnpm: 7.28.0
+  pnpm: 7.29.2
   prettier: 2.8.4
   prompts: ^2.4.2
   rimraf: 4.2.0
@@ -46,7 +46,7 @@ devDependencies:
   kolorist: 1.6.0
   lint-staged: 13.1.4
   minimist: 1.2.7
-  pnpm: 7.28.0
+  pnpm: 7.29.2
   prettier: 2.8.4
   prompts: 2.4.2
   rimraf: 4.2.0
@@ -3206,8 +3206,8 @@ packages:
       pathe: 1.1.0
     dev: true
 
-  /pnpm/7.28.0:
-    resolution: {integrity: sha512-nbuY07S2519jEjaV9KLjSFmOwh0b6KIViIdc/RCJkgco8SZa2+ikQQe4N3CfNn5By5BH0dKVbZ8Ox1Mw8wItSA==}
+  /pnpm/7.29.2:
+    resolution: {integrity: sha512-G1z1E1uKwDjhG85gJYXdycR9ND4Cy1jK3WbtqK09RofBraagz/mXdYoc0x765RurwP1Np1/Vi/uJ6fZqHUWgyw==}
     engines: {node: '>=14.6'}
     hasBin: true
     dev: true
