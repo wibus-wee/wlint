@@ -21,7 +21,7 @@ specifiers:
   lint-staged: 13.1.4
   minimist: ^1.2.7
   pnpm: 7.28.0
-  prettier: 2.8.4
+  prettier: 2.8.5
   prompts: ^2.4.2
   rimraf: 4.2.0
   typescript: 4.9.5
@@ -47,7 +47,7 @@ devDependencies:
   lint-staged: 13.1.4
   minimist: 1.2.7
   pnpm: 7.28.0
-  prettier: 2.8.4
+  prettier: 2.8.5
   prompts: 2.4.2
   rimraf: 4.2.0
   typescript: 4.9.5
@@ -717,7 +717,7 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@ianvs/prettier-plugin-sort-imports/3.3.0_prettier@2.8.4:
+  /@ianvs/prettier-plugin-sort-imports/3.3.0_prettier@2.8.5:
     resolution: {integrity: sha512-wUnIp5/SYmbfoAimtob8lzFGA689i/hk3yzoIhoEzFBBGIJA8zvlDMZLcQpc9c1PoVIt3DW3XZtZPTm0UTxKPw==}
     peerDependencies:
       prettier: 2.x
@@ -729,7 +729,7 @@ packages:
       '@babel/types': 7.20.7
       javascript-natural-sort: 0.7.1
       lodash: 4.17.21
-      prettier: 2.8.4
+      prettier: 2.8.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -754,8 +754,8 @@ packages:
   /@innei-util/prettier/0.8.2:
     resolution: {integrity: sha512-PuSnBp2zoX1HfmPPKWdr0uEOUQS/nJYBid5HL4RpV+zAiVrUYDfGK0F9N8ugEvPmP7I3gC85BjFTvNCDciYsgg==}
     dependencies:
-      '@trivago/prettier-plugin-sort-imports': /@ianvs/prettier-plugin-sort-imports/3.3.0_prettier@2.8.4
-      prettier: 2.8.4
+      '@trivago/prettier-plugin-sort-imports': /@ianvs/prettier-plugin-sort-imports/3.3.0_prettier@2.8.5
+      prettier: 2.8.5
       prettier-package-json: 2.6.3
     transitivePeerDependencies:
       - supports-color
@@ -3240,8 +3240,8 @@ packages:
       sort-order: 1.0.1
     dev: true
 
-  /prettier/2.8.4:
-    resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
+  /prettier/2.8.5:
+    resolution: {integrity: sha512-3gzuxrHbKUePRBB4ZeU08VNkUcqEHaUaouNt0m7LGP4Hti/NuB07C7PPTM/LkWqXoJYJn2McEo5+kxPNrtQkLQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
