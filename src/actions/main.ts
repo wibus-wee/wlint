@@ -65,7 +65,7 @@ export const main = async (argv: Iminimist) => {
 
   const original =
     configOriginals.length > 1
-      ? select({
+      ? await select({
           message: "Which original do you want to use?",
           choices: configOriginals,
         })
