@@ -95,6 +95,10 @@ export async function fetchCategoriesAndFiles(
   categories = categories.filter((category) => !category.includes("."));
   categories = categories.filter((category) => !IGNORE_DIRS.includes(category));
 
+  if (categories.length === 0 && !category) {
+    categories.push("");
+  }
+
   fileList = fileList.filter(
     (file) => SUPPORT_LINTER.includes(file) || file === "config.json"
   );

@@ -67,7 +67,7 @@ export const main = async (argv: Iminimist) => {
       : configOriginals[0];
   console.log(`${blue("ℹ")} Using ${green(original)} as original.`);
 
-  const isNpm = isNpmPackage(original);  
+  const isNpm = isNpmPackage(original);
   let categories: Array<string> = [];
   let fileList: Array<string> = [];
   let cache: NPMFiles | undefined = undefined;
@@ -90,9 +90,7 @@ export const main = async (argv: Iminimist) => {
       `${yellow("⚠")} Auto match category ${category} not found, turn to select`
     );
     category = undefined; // reset category
-    console.log(`Step: Select category`);
   }
-  console.log(`Step: Select category 2`);
 
   const selectCategory =
     (await select({
@@ -100,11 +98,7 @@ export const main = async (argv: Iminimist) => {
       choices: categories,
     })) || category;
 
-  console.log(`Step: Select category 3`);
-
   console.log(blue("ℹ"), "Project Category:", selectCategory);
-
-  console.log(`Step: Configure linters`)
 
   if (selectCategory) {
     if (isNpm) {
