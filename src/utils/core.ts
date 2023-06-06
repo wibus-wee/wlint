@@ -116,7 +116,7 @@ export async function fetchRepoConfig(
   console.log(`${blue("ℹ")} Fetching wlint repo config...`);
   if (fileList.includes("config.json")) {
     if (isNpm) {
-      const id = cache!.files[`config.json`].hex;
+      const id = cache!.files[`/config.json`].hex;
       repoConfig = await getNpmPackageFile(original, id);
     } else {
       repoConfig = await getGitHubFile(original, `config.json`);
