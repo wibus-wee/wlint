@@ -27,29 +27,26 @@ export async function update() {
   const category: string | undefined = config.category;
 
   const isNpm = isNpmPackage(origin);
-  let categories: Array<string> = [];
+
   let fileList: Array<string> = [];
   let cache: NPMFiles | undefined = undefined;
   console.log(`${blue(`ℹ`)} Updating your linter config...`);
 
-  const { _categories, _fileList, _cache } = await fetchCategoriesAndFiles(
-    isNpm,
-    origin,
-    category
-  );
-  categories = _categories;
+  const { _fileList, _cache } = await fetchCategoriesAndFiles(isNpm, origin);
+
   fileList = _fileList;
   cache = _cache;
 
+  const repoConfig = await fetchRepoConfig(isNpm, fileList, origin, cache);
+
   if (category) {
-    if (!categories.includes(category)) {
+    if (!Object.keys(repoConfig?.categories).includes(category)) {
       boom(`Category ${category} not found.`);
     }
-    categories = [category];
   }
 
   console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-  const repoConfig = await fetchRepoConfig(isNpm, fileList, origin, cache);
+
   const npmPackages = await configureLinters(
     isNpm,
     fileList,
@@ -98,8 +95,12 @@ export async function update() {
     console.log(
       `${blue("ℹ")} ${packageManager} add -D ${_installNpmPackages.join(" ")}`
     );
-    !__DEV__ &&
-      spawn.sync(packageManager, ["add", "-D", _installNpmPackages.join(" ")]);
+
+    if (!__DEV__) {
+      for (let i = 0; i < _installNpmPackages.length; i++) {
+        spawn.sync(packageManager, ["add", "-D", _installNpmPackages[i]]);
+      }
+    }
     console.log(`${green("✔")} New npm packages installed`);
   }
 
@@ -110,8 +111,11 @@ export async function update() {
     console.log(
       `${blue("ℹ")} ${packageManager} remove -D ${_deleteNpmPackages.join(" ")}`
     );
-    !__DEV__ &&
-      spawn.sync(packageManager, ["uninstall", _deleteNpmPackages.join(" ")]);
+    if (!__DEV__) {
+      for (let i = 0; i < _deleteNpmPackages.length; i++) {
+        spawn.sync(packageManager, ["remove", "-D", _deleteNpmPackages[i]]);
+      }
+    }
     console.log(`${green("✔")} Old npm packages removed`);
   }
 
@@ -136,7 +140,11 @@ export async function update() {
   if (_packages.length > 0) {
     console.log(`${blue("ℹ")} Updating npm packages: ${_packages.join(", ")}`);
     console.log(`${blue("ℹ")} ${packageManager} update ${_packages.join(" ")}`);
-    !__DEV__ && spawn.sync(packageManager, ["update", _packages.join(" ")]);
+    if (!__DEV__) {
+      for (let i = 0; i < _packages.length; i++) {
+        spawn.sync(packageManager, ["update", _packages[i]]);
+      }
+    }
     console.log(`${green("✔")} All packages updated`);
   }
 
