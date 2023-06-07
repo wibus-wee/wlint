@@ -22,14 +22,31 @@ export async function fetchCategoriesAndFiles(
   let fileList: Array<string> = [];
   let npmList: NPMFiles | undefined;
   if (isNpm) {
+    // get latest stable version from npm
     const latest = (await getNpmPackageInfo(origin))["dist-tags"].latest;
     if (!latest) {
       boom(`Can't get latest version of ${origin}`);
     }
-    npmList = await getNpmPackageFiles(origin, latest);
-    // cache = npmList;
 
+    // get files from the package
+    npmList = await getNpmPackageFiles(origin, latest);
+    npmList = {
+      ...npmList,
+      // remove the first / from the key
+      files: Object.fromEntries(
+        Object.entries(npmList.files).map(([key, value]) => [
+          key.replace("/", ""),
+          value,
+        ])
+      ),
+    };
+
+    // parse npm package
+
+    // get category list from the package
     Object.keys(npmList.files).forEach((key) => {
+      // remove first / from key
+      key = key.replace("/", "");
       if (category) {
         // if category is defined, only get files from that category
         if (!key?.match(/\//g)?.length) {
@@ -120,7 +137,7 @@ export async function fetchRepoConfig(
   console.log(`${blue("ℹ")} Fetching wlint repo config...`);
   if (fileList.includes("config.json")) {
     if (isNpm) {
-      const id = cache!.files[`/config.json`].hex;
+      const id = cache!.files[`config.json`].hex;
       repoConfig = await getNpmPackageFile(original, id);
     } else {
       repoConfig = await getGitHubFile(original, `config.json`);
