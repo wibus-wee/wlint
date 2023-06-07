@@ -6,7 +6,7 @@ import {
   SUPPORT_WLINTRC_KEYS,
 } from "../constants";
 import { boom } from "../error";
-import { __DEV__ } from "./config";
+import { __DEV__ } from "./env";
 import { parseConfigKeys, transformValue } from "./others";
 import { wlintConfig } from "./wlintrc";
 

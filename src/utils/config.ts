@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import { CONFIG, WLINT } from "../constants";
 import { prettyStringify } from "./generator";
-
-export const __DEV__ = process.env.NODE_ENV === "development";
+import { __DEV__ } from "./env";
 
 export function getConfigFile() {
   // Auto create wlint config file

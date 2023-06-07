@@ -1,10 +1,10 @@
 import minimist from "minimist";
+import { validateWlintRc } from "./utils";
 import { alias } from "./actions/alias";
 import { origins } from "./actions/origins";
 import { main } from "./actions/main";
 import { Iminimist } from "./types";
 import { config } from "./actions/config";
-import { validateWlintRc } from "./utils";
 import { lint } from "./actions/lint";
 import { update } from "./actions/update";
 

@@ -22,14 +22,6 @@
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
   "files": [
     "dist"
   ],

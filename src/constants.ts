@@ -1,6 +1,7 @@
 import path from "path";
-import { __DEV__ } from "./utils";
 import { userHome } from "./utils/user";
+
+const __DEV__ = process.env.NODE_ENV === "development";
 
 export const WLINT = __DEV__
   ? `${path.resolve(process.cwd())}/temp`
