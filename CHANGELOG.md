@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [0.2.1](https://github.com/wibus-wee/wlint/compare/v0.2.0...v0.2.1) (2023-06-07)
+
+
+### Bug Fixes
+
+* **matcher:** use incompatible `require` syntax ([bac1e02](https://github.com/wibus-wee/wlint/commit/bac1e023c2bec915feec4d79f8e10b5318468c60))
+* **prompts:** remove console log for development ([f38077a](https://github.com/wibus-wee/wlint/commit/f38077ad69eebaef17607df6bd7a1b34563d386b))
+* **runtime:** runtime error occurred ([97a93ca](https://github.com/wibus-wee/wlint/commit/97a93ca015f9ff7b2cf736e41c3b46e552bef30c))
+
+
+
 # [0.2.0](https://github.com/wibus-wee/wlint/compare/v0.1.0...v0.2.0) (2023-06-07)
 
 
