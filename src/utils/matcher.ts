@@ -27,7 +27,9 @@ export function autoMatcher(autoMatchConfig?: {
   if (!fs.existsSync(path.resolve(process.cwd(), "package.json"))) {
     boom(`Please run this command in a project folder`);
   }
-  const packages = require(path.resolve(process.cwd(), "package.json"));
+  const packages = JSON.parse(
+    fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8")
+  );
   let dependencies: string[] = [];
   if (packages.dependencies) {
     // 只需要名字
