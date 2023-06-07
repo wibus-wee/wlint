@@ -51,7 +51,6 @@ export async function select(optsRaw: SelectProps) {
     choices: [] as Array<prompts.Choice>,
     message: optsRaw.message,
   };
-  console.log(optsRaw.choices);
 
   if (typeof optsRaw.choices === "string") {
     opts.choices = optsRaw.choices.split(" ").map((choice) => ({
@@ -71,8 +70,6 @@ export async function select(optsRaw: SelectProps) {
       });
     });
   }
-
-  console.log(opts);
 
   return (await prompts(opts, promptsOptions)).result;
 }
