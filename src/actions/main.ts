@@ -92,11 +92,17 @@ export const main = async (argv: Iminimist) => {
     category = undefined; // reset category
   }
 
+  if (categories.length && categories[0] === "") {
+    console.log(`${blue("ℹ")} Found empty category, turn to select`);
+    categories = repoConfig?.categories || [];
+  }
+
   const selectCategory =
+    category ||
     (await select({
       message: "Which category do you want to use?",
       choices: categories,
-    })) || category;
+    }));
 
   console.log(blue("ℹ"), "Project Category:", selectCategory);
 
@@ -147,16 +153,14 @@ export const main = async (argv: Iminimist) => {
       .map((item) => item.packages.join(" "))
       .join(" ")}`
   );
-  !__DEV__ &&
-    spawn.sync(
-      packageManager,
-      [
-        "add",
-        "-D",
-        npmPackages.map((item) => item.packages.join(" ")).join(" "),
-      ],
-      { stdio: "inherit" }
-    );
+
+  if (!__DEV__) {
+    npmPackages.forEach((item) => {
+      spawn.sync(packageManager!, ["add", "-D", ...item.packages], {
+        stdio: "inherit",
+      });
+    });
+  }
 
   console.log(`${green("✔")} Linter dependencies installed`);
 

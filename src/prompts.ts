@@ -35,13 +35,12 @@ export async function confirm(optsRaw: ConfirmProps | string) {
 }
 
 export type SelectProps = BaseProps & {
-  choices: Array<
+  choices:
     | string
+    | string[]
     | {
-        title: string;
-        value: string;
-      }
-  >;
+        [key: string]: string[];
+      };
   multiselect?: boolean;
 };
 
@@ -52,16 +51,29 @@ export async function select(optsRaw: SelectProps) {
     choices: [] as Array<prompts.Choice>,
     message: optsRaw.message,
   };
-  optsRaw.choices.forEach((choice) => {
-    if (typeof choice === "string") {
+  console.log(optsRaw.choices);
+
+  if (typeof optsRaw.choices === "string") {
+    opts.choices = optsRaw.choices.split(" ").map((choice) => ({
+      title: choice,
+      value: choice,
+    }));
+  } else if (Array.isArray(optsRaw.choices)) {
+    opts.choices = optsRaw.choices.map((choice) => ({
+      title: choice,
+      value: choice,
+    }));
+  } else {
+    Object.keys(optsRaw.choices).forEach((key) => {
       (opts.choices as Array<prompts.Choice>).push({
-        title: choice,
-        value: choice,
+        title: key,
+        value: key,
       });
-    } else {
-      (opts.choices as Array<prompts.Choice>).push(choice);
-    }
-  });
+    });
+  }
+
+  console.log(opts);
+
   return (await prompts(opts, promptsOptions)).result;
 }
 
