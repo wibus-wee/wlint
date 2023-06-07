@@ -1,24 +1,18 @@
 import spawn from "cross-spawn";
 import { blue, green } from "kolorist";
-import { IGNORE_DIRS, SUPPORT_LINTER } from "../constants";
-import { boom } from "../error";
 import {
-  getGitHubFile,
-  getGitHubFiles,
-  getNpmPackageFile,
-  getNpmPackageFiles,
-  getNpmPackageInfo,
-} from "../request";
-import { InpmPackages, NPMFiles } from "../types";
+  configureLinters,
+  fetchCategoriesAndFiles,
+  fetchRepoConfig,
+  updateWlintRC,
+} from "../utils/core";
+import { boom } from "../error";
+import { NPMFiles } from "../types";
 import {
   detectPkgManage,
-  generateLinterRcFile,
   getWlintConfig,
   hasWlintConfig,
   isNpmPackage,
-  parseNpmPackages,
-  prettyStringify,
-  setWlintConfig,
   wlintConfig,
   __DEV__,
 } from "../utils";
@@ -29,136 +23,38 @@ export async function update() {
   }
   const config = getWlintConfig();
   const origin: string = config.origin;
-  const category: string | undefined = config.category;
-  const isNpm = isNpmPackage(origin);
   const packageManager = detectPkgManage();
-  let categories: Array<string> = [];
+  const category: string | undefined = config.category;
+
+  const isNpm = isNpmPackage(origin);
+
   let fileList: Array<string> = [];
-  let cache: NPMFiles;
+  let cache: NPMFiles | undefined = undefined;
   console.log(`${blue(`ℹ`)} Updating your linter config...`);
 
-  if (isNpm) {
-    const latest = (await getNpmPackageInfo(origin))["dist-tags"].latest;
-    if (!latest) {
-      boom(`Can't get latest version of ${origin}`);
-    }
-    const list = await getNpmPackageFiles(origin, latest);
-    cache = list;
+  const { _fileList, _cache } = await fetchCategoriesAndFiles(isNpm, origin);
 
-    Object.keys(list.files).forEach((key) => {
-      if (category) {
-        // if category is defined, only get files from that category
-        if (!key?.match(/\//g)?.length) {
-          categories.push(key);
-        }
-        if (key?.match(/\//g)?.length === 2) {
-          const category = key.split("/")[0];
-          if (!categories.includes(category)) {
-            categories.push(category);
-          }
-        }
-        const data = list.files;
-        Object.keys(data).forEach((key) => {
-          if (key.match(/\//g)?.length === 2) {
-            const _category = key.split("/")[0];
-            if (_category === category) {
-              const file = key.split("/")[1];
-              fileList.push(file); // push category file to fileList
-            }
-          }
-        });
-      }
-      if (key === "config.json") {
-        fileList.push(key);
-      }
-    });
+  fileList = _fileList;
+  cache = _cache;
 
-    if (categories.length === 0 && !category) {
-      Object.keys(list.files).forEach((key) => {
-        const file = key.split("/")[1];
-        fileList.push(file);
-      });
-    }
-  } else {
-    const list = await getGitHubFiles(origin);
-    list.forEach((file) => {
-      if (file.type === "dir" && category) {
-        categories.push(file.name);
-      }
-      if (file.type === "file" || file.name === "config.json") {
-        fileList.push(file.name);
-      }
-    });
-
-    if (categories.length === 0 && !category) {
-      list.forEach((file) => {
-        if (file.type === "file") {
-          fileList.push(file.name);
-        }
-      });
-    }
-
-    if (category) {
-      const _list = await getGitHubFiles(origin, category);
-      _list.forEach((file) => {
-        if (file.type === "file" && file.path.includes(category)) {
-          fileList.push(file.name);
-        }
-      });
-    }
-  }
+  const repoConfig = await fetchRepoConfig(isNpm, fileList, origin, cache);
 
   if (category) {
-    categories = categories.filter((category) => !category.includes("."));
-    categories = categories.filter(
-      (category) => !IGNORE_DIRS.includes(category)
-    );
+    if (!Object.keys(repoConfig?.categories).includes(category)) {
+      boom(`Category ${category} not found.`);
+    }
   }
-
-  fileList = fileList.filter(
-    (file) => SUPPORT_LINTER.includes(file) || file === "config.json"
-  );
 
   console.log(`${blue("ℹ")} Scaning wlint repo config...`);
-  let repoConfig: any;
-  if (fileList.includes("config.json")) {
-    if (isNpm) {
-      const id = cache!.files[`config.json`].hex;
-      repoConfig = await getNpmPackageFile(origin, id);
-    } else {
-      repoConfig = await getGitHubFile(origin, `config.json`);
-    }
-    repoConfig = JSON.parse(JSON.stringify(repoConfig));
-  }
-  const npmPackages = new Array<InpmPackages>(); // 需要安装的包
 
-  let data: object = {};
-
-  for (const linter of SUPPORT_LINTER) {
-    console.log(`${blue("ℹ")} Configuring ${linter}...`);
-    if (fileList.includes(`${linter}`)) {
-      const aliases = repoConfig?.aliases || {};
-      const path = `${category ? `${category}/` : ""}${linter}`;
-      if (isNpm) {
-        const fileId = cache!.files[path].hex;
-        data = await getNpmPackageFile(origin, fileId);
-      } else {
-        console.log(
-          `${blue("ℹ")} Generating .${linter.replace(".json", "")}rc...`
-        );
-        data = await getGitHubFile(origin, path);
-      }
-      generateLinterRcFile(linter, prettyStringify(data));
-      console.log(`${green("✔")} .${linter.replace(".json", "")}rc generated`);
-      npmPackages.push({
-        linter,
-        packages: parseNpmPackages(linter, JSON.stringify(data), aliases),
-      });
-      console.log(
-        `${green("✔")} ${linter.replace(".json", "")} npm packages recorded`
-      );
-    }
-  }
+  const npmPackages = await configureLinters(
+    isNpm,
+    fileList,
+    origin,
+    category,
+    repoConfig,
+    cache
+  );
 
   console.log(`${blue("ℹ")} Comparing npm packages...`);
   const _npmPackages = new Array<string>();
@@ -199,8 +95,12 @@ export async function update() {
     console.log(
       `${blue("ℹ")} ${packageManager} add -D ${_installNpmPackages.join(" ")}`
     );
-    !__DEV__ &&
-      spawn.sync(packageManager, ["add", "-D", _installNpmPackages.join(" ")]);
+
+    if (!__DEV__) {
+      for (let i = 0; i < _installNpmPackages.length; i++) {
+        spawn.sync(packageManager, ["add", "-D", _installNpmPackages[i]]);
+      }
+    }
     console.log(`${green("✔")} New npm packages installed`);
   }
 
@@ -211,8 +111,11 @@ export async function update() {
     console.log(
       `${blue("ℹ")} ${packageManager} remove -D ${_deleteNpmPackages.join(" ")}`
     );
-    !__DEV__ &&
-      spawn.sync(packageManager, ["uninstall", _deleteNpmPackages.join(" ")]);
+    if (!__DEV__) {
+      for (let i = 0; i < _deleteNpmPackages.length; i++) {
+        spawn.sync(packageManager, ["remove", "-D", _deleteNpmPackages[i]]);
+      }
+    }
     console.log(`${green("✔")} Old npm packages removed`);
   }
 
@@ -237,12 +140,15 @@ export async function update() {
   if (_packages.length > 0) {
     console.log(`${blue("ℹ")} Updating npm packages: ${_packages.join(", ")}`);
     console.log(`${blue("ℹ")} ${packageManager} update ${_packages.join(" ")}`);
-    !__DEV__ && spawn.sync(packageManager, ["update", _packages.join(" ")]);
+    if (!__DEV__) {
+      for (let i = 0; i < _packages.length; i++) {
+        spawn.sync(packageManager, ["update", _packages[i]]);
+      }
+    }
     console.log(`${green("✔")} All packages updated`);
   }
 
   console.log(`${green("✔")} Update completed`);
 
-  setWlintConfig("aliases", repoConfig?.aliases || {});
-  console.log(`${green("✔")} .wlintrc updated`);
+  updateWlintRC(origin, category, npmPackages);
 }
