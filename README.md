@@ -7,6 +7,9 @@
 <a href="https://github.com/wibus-wee/wlint#gh-dark-mode-only">
 <img src="https://user-images.githubusercontent.com/62133302/210071466-38197cce-8dbf-4a7a-b041-f5aa0e9c521d.png" />
 </a>
+
+English | [简体中文](./README.zh-hans.md)
+
 </div>
 
 wlint is a cli to config your project lint quickly. **Just enter `wlint`**, wlint will automatically grab the appropriate lint configuration file, and automatically install the dependencies.
@@ -128,7 +131,7 @@ You can create your own config origin, and you can also use the config origin th
 
 ### Create Your Own Config Origin
 
-1. Create a new repository on GitHub, and create a linter config file in the root directory of the repository, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linters Config Support](#linters-config-support) section.
+1. Create a new repository on GitHub, and create a linter config file in the root directory of the repository, such as: `eslint.json`, `prettier.json`. Please follow the name rules in the [Linters Configs Support](#linter-configs-support) section.
 2. Go to your shell and run the following command:
 
 ```bash
@@ -266,7 +269,7 @@ For example, you can use `wlint update` command to update the linters. Learn mor
 
 ## Origin Config Support
 
-`wlint` have a origin config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#custom-linting-config-support) and [automatic matching category](#automatic-matching-category) in the origin config file.
+`wlint` have a origin config file to configure the linter config, it provides a more flexible configuration method. For example, you can configure [package alias](#packages-alias) and [automatic matching category](#automatic-matching-category) in the origin config file.
 
 You should create a `config.json` file in the root directory of your project, and then you can configure the origin config in the `config.json` file. For example:
 
@@ -305,6 +308,4 @@ This project open source under the [MIT License](https://opensource.org/licenses
 
 ## Author
 
-wlint © Wibus, Released under the MIT License.
-
-> [Personal Website](http://iucky.cn/) · [Blog](https://blog.iucky.cn/) · GitHub [@wibus-wee](https://github.com/wibus-wee/) · Telegram [@wibus✪](https://t.me/wibus_wee)
+wlint © Wibus & AkaraChen, Released under the MIT License.
