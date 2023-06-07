@@ -85,7 +85,7 @@ export const main = async (argv: Iminimist) => {
   let category: string | undefined =
     autoMatcher(repoConfig?.categories) || argv.c || argv.category;
 
-  if (category && !categories.includes(category)) {
+  if (category && !Object.keys(repoConfig?.categories).includes(category)) {
     console.log(
       `${yellow("⚠")} Auto match category ${category} not found, turn to select`
     );
