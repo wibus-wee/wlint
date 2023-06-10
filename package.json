@@ -56,7 +56,7 @@
     "@innei/eslint-config-ts": "0.10.1",
     "@types/cross-spawn": "^6.0.2",
     "@types/minimist": "^1.2.2",
-    "@types/node": "18.16.16",
+    "@types/node": "18.16.17",
     "@types/prompts": "^2.4.4",
     "cross-spawn": "^7.0.3",
     "eslint": "8.42.0",
