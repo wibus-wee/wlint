@@ -62,7 +62,7 @@
     "eslint": "8.43.0",
     "husky": "8.0.3",
     "kolorist": "^1.8.0",
-    "lint-staged": "13.2.2",
+    "lint-staged": "13.2.3",
     "minimist": "^1.2.8",
     "pnpm": "8.6.5",
     "prettier": "2.8.8",
