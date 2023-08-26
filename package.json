@@ -59,7 +59,7 @@
     "@types/node": "18.17.11",
     "@types/prompts": "^2.4.4",
     "cross-spawn": "^7.0.3",
-    "eslint": "8.47.0",
+    "eslint": "8.48.0",
     "husky": "8.0.3",
     "kolorist": "^1.8.0",
     "lint-staged": "13.2.3",
